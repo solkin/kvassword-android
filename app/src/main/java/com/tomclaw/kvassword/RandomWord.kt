@@ -33,7 +33,7 @@ class RandomWord(private val grammar: Grammar) {
             } else {
                 flag = 0
             }
-            if (count == 5) {
+            if (count == 5 && randomWord.length > 3) {
                 flag = 1
                 count++
             } else if (count == 20) {
