@@ -22,4 +22,24 @@
         android:layout_height="wrap_content"
         android:text="@string/next" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <include layout="@layout/char_layout" />
+
+        <include layout="@layout/char_layout" />
+
+        <include layout="@layout/char_layout" />
+
+        <include layout="@layout/char_layout" />
+
+        <include layout="@layout/char_layout" />
+
+        <include layout="@layout/char_layout" />
+
+    </LinearLayout>
+
 </LinearLayout>
