@@ -7,13 +7,27 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:gravity="center_horizontal"
-        android:text="Hello World!" />
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pass_back"
+            android:fontFamily="monospace"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="@color/colorChar"
+            android:textIsSelectable="true"
+            android:textSize="18sp"
+            android:typeface="monospace" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/button"
@@ -21,19 +35,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/pass_back"/>
-
-    </LinearLayout>
 
 </LinearLayout>

@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val text = findViewById<TextView>(R.id.text)
         val button = findViewById<Button>(R.id.button)
+        val password = findViewById<TextView>(R.id.password)
 
         random = Random(System.currentTimeMillis())
 
@@ -37,17 +37,16 @@ class MainActivity : AppCompatActivity() {
         randomWord = RandomWord(grammar)
 
         button.setOnClickListener {
-            generate(text)
+            generate(password)
         }
 
-        generate(text)
+        generate(password)
     }
 
     private fun generate(text: TextView) {
         val pass = randomWord.nextWord(3).toFirstUpper() +
                 randomDigit() + randomWord.nextWord(3).toFirstUpper() + randomSymbol() +
-                randomWord.nextWord(3).toUpperCase() + "\n" +
-                randomWord.nextWord(7)
+                randomWord.nextWord(3).toUpperCase()
         text.text = pass
     }
 
