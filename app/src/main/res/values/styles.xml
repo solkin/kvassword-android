@@ -8,18 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Character">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:paddingRight">6dp</item>
-        <item name="android:paddingTop">2dp</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:background">@drawable/char_back</item>
-        <item name="android:textColor">@color/colorChar</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">monospace</item>
-        <item name="android:typeface">monospace</item>
-    </style>
-
 </resources>
