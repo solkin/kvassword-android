@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
                 reader.close()
             } catch (ignored: IOException) {
             }
-
         }
         randomWord = RandomWord(grammar)
 
