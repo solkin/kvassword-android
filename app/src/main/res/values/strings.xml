@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">KvassWord</string>
     <string name="next">Next</string>
+    <string name="pass_good">Good</string>
+    <string name="pass_strong">Strong</string>
+    <string name="pass_very_strong">Very Strong</string>
 </resources>

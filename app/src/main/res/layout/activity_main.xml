@@ -7,6 +7,30 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/pass_good"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pass_good" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/pass_strong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pass_strong" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/pass_very_strong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pass_very_strong" />
+
+    </RadioGroup>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
