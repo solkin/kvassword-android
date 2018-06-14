@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity() {
         }
         randomWord = RandomWord(grammar)
 
+        strength?.setOnCheckedChangeListener { _, _ ->
+            generate()
+        }
         button?.setOnClickListener {
             generate()
         }
