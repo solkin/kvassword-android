@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     private fun generate() {
         val pass = when (strength?.checkedRadioButtonId) {
             R.id.pass_good -> listOf(
-                    randomWord.nextWord(4).toFirstUpper(),
+                    randomWord.nextWord(6).toFirstUpper(),
                     randomDigit(),
                     randomDigit()
             )
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     private fun randomDigit(): String = random.nextInt(10).toString()
 
     private fun randomSymbol(): String {
-        val symbols = "!@#\$%&*-+=:?"
+        val symbols = "!@#\$%&*-+=?"
         val i = random.nextInt(symbols.length)
         return symbols.substring(i, i + 1)
     }
