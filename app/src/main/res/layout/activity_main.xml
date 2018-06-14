@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
+    android:padding="12dp"
     tools:context=".MainActivity">
 
     <RadioGroup
@@ -17,17 +17,32 @@
             android:layout_height="wrap_content"
             android:text="@string/pass_good" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/description_pass_good" />
+
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/pass_strong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/pass_strong" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/description_pass_strong" />
+
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/pass_very_strong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/pass_very_strong" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/description_pass_very_strong" />
 
     </RadioGroup>
 
@@ -58,6 +73,7 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:text="@string/next" />
 
 </LinearLayout>
