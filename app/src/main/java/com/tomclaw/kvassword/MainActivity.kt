@@ -1,14 +1,20 @@
 package com.tomclaw.kvassword
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.GsonBuilder
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Random
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generate() {
-        val pass = when (strength?.checkedRadioButtonId) {
+        val passItems = when (strength?.checkedRadioButtonId) {
             R.id.pass_good -> listOf(
                     randomWord.nextWord(6).toFirstUpper(),
                     randomDigit(),
@@ -75,7 +81,9 @@ class MainActivity : AppCompatActivity() {
             )
             else -> throw IllegalStateException("Invalid selection")
         }
-        password?.text = pass.concatItems()
+        val pass = passItems.concatItems()
+        password?.text = pass
+        copyStringToClipboard(context = this, string = pass)
     }
 
     private fun randomDigit(): String = random.nextInt(10).toString()
@@ -95,4 +103,12 @@ private fun List<String>.concatItems(): kotlin.String {
 
 private fun String.toFirstUpper(): String {
     return substring(0, 1).toUpperCase() + substring(1).toLowerCase()
+}
+
+private fun copyStringToClipboard(context: Context, string: String, toastText: Int = 0) {
+    val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+    clipboardManager.primaryClip = ClipData.newPlainText("", string)
+    if (toastText > 0) {
+        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+    }
 }
