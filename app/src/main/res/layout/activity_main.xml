@@ -8,8 +8,10 @@
     tools:context=".MainActivity">
 
     <RadioGroup
+        android:id="@+id/pass_strength"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/pass_strong">
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/pass_good"
@@ -67,7 +69,8 @@
             android:textColor="@color/colorChar"
             android:textIsSelectable="true"
             android:textSize="18sp"
-            android:typeface="monospace" />
+            android:typeface="monospace"
+            tools:text="Fer2Mic*GAR" />
 
     </LinearLayout>
 
