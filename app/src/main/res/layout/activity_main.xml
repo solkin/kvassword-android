@@ -17,6 +17,7 @@
             android:id="@+id/pass_good"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:soundEffectsEnabled="false"
             android:text="@string/pass_good" />
 
         <TextView
@@ -29,6 +30,7 @@
             android:id="@+id/pass_strong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:soundEffectsEnabled="false"
             android:text="@string/pass_strong" />
 
         <TextView
@@ -41,6 +43,7 @@
             android:id="@+id/pass_very_strong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:soundEffectsEnabled="false"
             android:text="@string/pass_very_strong" />
 
         <TextView
@@ -62,9 +65,9 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:background="@drawable/pass_back"
             android:fontFamily="monospace"
+            android:gravity="center_horizontal"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:textColor="@color/colorChar"
@@ -81,6 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:soundEffectsEnabled="false"
         android:text="@string/next" />
 
 </LinearLayout>

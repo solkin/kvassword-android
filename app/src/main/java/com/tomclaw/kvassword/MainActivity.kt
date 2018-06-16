@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.res.Resources
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Spannable
@@ -20,6 +21,7 @@ import net.hockeyapp.android.metrics.MetricsManager
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Random
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,14 +57,23 @@ class MainActivity : AppCompatActivity() {
 
         strength?.setOnCheckedChangeListener { _, _ ->
             generate()
+            playClickSound()
         }
         button?.setOnClickListener {
             generate()
+            playClickSound()
         }
 
         generate()
 
         MetricsManager.register(application)
+    }
+
+    private fun playClickSound() {
+        MediaPlayer.create(applicationContext, R.raw.click).apply {
+            setOnCompletionListener { it.release() }
+            start()
+        }
     }
 
     public override fun onResume() {
@@ -106,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         trackPasswordStrength()
     }
 
-    private fun randomDigit(): String = random.nextInt(10).toString()
+    private fun randomDigit(): String = (1 + random.nextInt(9)).toString()
 
     private fun randomSymbol(): String {
         val symbols = "!@#\$%&*+=?"
