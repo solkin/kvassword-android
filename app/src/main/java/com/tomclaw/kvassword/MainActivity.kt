@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Random
-
+import net.hockeyapp.android.CrashManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         generate()
+
+        checkForCrashes();
     }
 
     private fun generate() {
@@ -92,6 +94,10 @@ class MainActivity : AppCompatActivity() {
         val symbols = "!@#\$%&*-+=?"
         val i = random.nextInt(symbols.length)
         return symbols.substring(i, i + 1)
+    }
+
+    private fun checkForCrashes() {
+        CrashManager.register(this)
     }
 }
 
