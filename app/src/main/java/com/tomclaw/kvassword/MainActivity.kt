@@ -11,10 +11,11 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.GsonBuilder
+import net.hockeyapp.android.CrashManager
+import net.hockeyapp.android.metrics.MetricsManager
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Random
-import net.hockeyapp.android.CrashManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,7 +58,12 @@ class MainActivity : AppCompatActivity() {
 
         generate()
 
-        checkForCrashes();
+        MetricsManager.register(application)
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        checkForCrashes()
     }
 
     private fun generate() {
@@ -86,6 +92,8 @@ class MainActivity : AppCompatActivity() {
         val pass = passItems.concatItems()
         password?.text = pass
         copyStringToClipboard(context = this, string = pass)
+
+        trackPasswordStrength()
     }
 
     private fun randomDigit(): String = random.nextInt(10).toString()
@@ -98,6 +106,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkForCrashes() {
         CrashManager.register(this)
+    }
+
+    private fun trackPasswordStrength() {
+        when (strength?.checkedRadioButtonId) {
+            R.id.pass_good -> "good"
+            R.id.pass_strong -> "strong"
+            R.id.pass_very_strong -> "very_strong"
+            else -> null
+        }?.let {
+            val properties = hashMapOf("strength" to it)
+            MetricsManager.trackEvent("Generate Password", properties)
+        }
     }
 }
 

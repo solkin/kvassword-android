@@ -19,3 +19,31 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn android.support.v7.**
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+-keep class android.support.design.widget.** { *; }
+-keep interface android.support.design.widget.** { *; }
+-dontwarn android.support.design.**
+-keep public class * extends android.support.design.widget.CoordinatorLayout$Behavior {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+# Grammar
+-keep class com.tomclaw.kvassword.Unobfuscatable
+-keep class * implements com.tomclaw.kvassword.Unobfuscatable
+-keepclassmembernames class * implements com.tomclaw.kvassword.Unobfuscatable {
+  !transient <fields>;
+}
+-keepnames class * implements com.tomclaw.kvassword.Unobfuscatable {
+  !transient <fields>;
+}
+-keepclassmembers class * implements com.tomclaw.kvassword.Unobfuscatable {
+  <init>(...);
+}
+
+-keepattributes *Annotation*,EnclosingMethod
+-keepclasseswithmembers class * {
+	public <init>(android.content.Context, android.util.AttributeSet, int);
+}
