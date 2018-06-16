@@ -6,4 +6,10 @@
     <color name="colorPassBack">#FAFAFA</color>
     <color name="colorPassBorder">#BBBCBD</color>
     <color name="colorChar">#3A3B3C</color>
+
+    <color name="color1">#6c5ce7</color>
+    <color name="color2">#e17055</color>
+    <color name="color3">#00b894</color>
+    <color name="color4">#e84393</color>
+    <color name="color5">#0984e3</color>
 </resources>

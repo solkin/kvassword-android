@@ -4,8 +4,12 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.res.Resources
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -69,29 +73,35 @@ class MainActivity : AppCompatActivity() {
     private fun generate() {
         val passItems = when (strength?.checkedRadioButtonId) {
             R.id.pass_good -> listOf(
-                    randomWord.nextWord(6).toFirstUpper(),
-                    randomDigit(),
-                    randomDigit()
+                    Span(R.color.color1, randomWord.nextWord(6).toFirstUpper()),
+                    Span(
+                            R.color.color2,
+                            randomDigit(),
+                            randomDigit()
+                    )
             )
             R.id.pass_strong -> listOf(
-                    randomWord.nextWord(3).toFirstUpper(),
-                    randomDigit(),
-                    randomWord.nextWord(3).toFirstUpper(),
-                    randomSymbol()
+                    Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
+                    Span(R.color.color2, randomDigit()),
+                    Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
+                    Span(R.color.color4, randomSymbol())
             )
             R.id.pass_very_strong -> listOf(
-                    randomWord.nextWord(3).toFirstUpper(),
-                    randomDigit(),
-                    randomWord.nextWord(3).toFirstUpper(),
-                    randomSymbol(),
-                    randomDigit(),
-                    randomWord.nextWord(3).toUpperCase()
+                    Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
+                    Span(R.color.color2, randomDigit()),
+                    Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
+                    Span(
+                            R.color.color4,
+                            randomSymbol(),
+                            randomDigit()
+                    ),
+                    Span(R.color.color5, randomWord.nextWord(3).toUpperCase())
             )
             else -> throw IllegalStateException("Invalid selection")
         }
-        val pass = passItems.concatItems()
+        val pass = passItems.concatItems(resources)
         password?.text = pass
-        copyStringToClipboard(context = this, string = pass)
+        copyStringToClipboard(context = this, string = pass.toString())
 
         trackPasswordStrength()
     }
@@ -99,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     private fun randomDigit(): String = random.nextInt(10).toString()
 
     private fun randomSymbol(): String {
-        val symbols = "!@#\$%&*-+=?"
+        val symbols = "!@#\$%&*+=?"
         val i = random.nextInt(symbols.length)
         return symbols.substring(i, i + 1)
     }
@@ -121,10 +131,29 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private fun List<String>.concatItems(): kotlin.String {
-    val string = StringBuilder()
-    forEach { string.append(it) }
-    return string.toString()
+private fun List<Span>.concatItems(resources: Resources): Spannable {
+    var string = ""
+    forEach { string += it.text.concat() }
+    val spannable = SpannableString(string)
+    var position = 0
+    forEach { span ->
+        val start = position
+        val end = position + span.text.concat().length
+        spannable.setSpan(
+                ForegroundColorSpan(resources.getColor(span.color)),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        position = end
+    }
+    return spannable
+}
+
+private fun Array<out String>.concat(): String {
+    var string = ""
+    forEach { string += it }
+    return string
 }
 
 private fun String.toFirstUpper(): String {
