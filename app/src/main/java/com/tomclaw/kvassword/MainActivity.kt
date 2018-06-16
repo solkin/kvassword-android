@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val restoredPassword = savedInstanceState?.getCharSequence(KEY_PASSWORD)
+
         initDictionary()
 
         rootView = findViewById(R.id.root_view)
@@ -38,14 +40,16 @@ class MainActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         strength = findViewById(R.id.pass_strength)
 
-        strength?.setOnCheckedChangeListener { _, _ ->
-            generate()
-            playClickSound()
-        }
-        button?.setOnClickListener {
-            generate()
-            playClickSound()
-        }
+        listOf<View>(
+                findViewById(R.id.pass_good),
+                findViewById(R.id.pass_good_description),
+                findViewById(R.id.pass_strong),
+                findViewById(R.id.pass_strong_description),
+                findViewById(R.id.pass_very_strong),
+                findViewById(R.id.pass_very_strong_description)
+        ).forEach { it.setOnClickListener { onClick(it) } }
+
+        button?.setOnClickListener { onClick(it) }
         password?.setOnClickListener {
             toString().copyToClipboard(context = applicationContext)
             rootView?.let {
@@ -54,7 +58,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        generate()
+        if (restoredPassword == null) {
+            generate()
+        } else {
+            password?.text = restoredPassword
+        }
 
         MetricsManager.register(application)
     }
@@ -62,6 +70,11 @@ class MainActivity : AppCompatActivity() {
     public override fun onResume() {
         super.onResume()
         checkForCrashes()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putCharSequence(KEY_PASSWORD, password?.text)
     }
 
     private fun initDictionary() {
@@ -79,6 +92,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
         randomWord = RandomWord(grammar)
+    }
+
+    private fun onClick(view: View) {
+        when (view.id) {
+            R.id.pass_good, R.id.pass_good_description -> {
+                strength?.check(R.id.pass_good)
+            }
+            R.id.pass_strong, R.id.pass_strong_description -> {
+                strength?.check(R.id.pass_strong)
+            }
+            R.id.pass_very_strong, R.id.pass_very_strong_description -> {
+                strength?.check(R.id.pass_very_strong)
+            }
+        }
+        generate()
+        playClickSound()
     }
 
     private fun playClickSound() {
@@ -154,3 +183,5 @@ class MainActivity : AppCompatActivity() {
         CrashManager.register(this)
     }
 }
+
+private const val KEY_PASSWORD = "password"

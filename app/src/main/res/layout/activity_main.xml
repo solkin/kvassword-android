@@ -31,6 +31,7 @@
                     android:text="@string/pass_good" />
 
                 <TextView
+                    android:id="@+id/pass_good_description"
                     style="@style/RadioButtonDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
                     android:text="@string/pass_strong" />
 
                 <TextView
+                    android:id="@+id/pass_strong_description"
                     style="@style/RadioButtonDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,6 +59,7 @@
                     android:text="@string/pass_very_strong" />
 
                 <TextView
+                    android:id="@+id/pass_very_strong_description"
                     style="@style/RadioButtonDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

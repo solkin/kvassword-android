@@ -7,7 +7,6 @@ import android.content.res.Resources
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.widget.Toast
 import java.util.Random
 
 fun Random.digit(): String = (1 + nextInt(9)).toString()
