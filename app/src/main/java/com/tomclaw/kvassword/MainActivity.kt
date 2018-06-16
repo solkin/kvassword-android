@@ -1,33 +1,28 @@
 package com.tomclaw.kvassword
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
-import android.content.res.Resources
+import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.RawRes
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import com.google.gson.GsonBuilder
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
-import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Random
-
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var random: Random
     private lateinit var randomWord: RandomWord
 
+    private var rootView: View? = null
     private var button: Button? = null
     private var password: TextView? = null
     private var strength: RadioGroup? = null
@@ -36,10 +31,40 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initDictionary()
+
+        rootView = findViewById(R.id.root_view)
         button = findViewById(R.id.button)
         password = findViewById(R.id.password)
         strength = findViewById(R.id.pass_strength)
 
+        strength?.setOnCheckedChangeListener { _, _ ->
+            generate()
+            playClickSound()
+        }
+        button?.setOnClickListener {
+            generate()
+            playClickSound()
+        }
+        password?.setOnClickListener {
+            toString().copyToClipboard(context = applicationContext)
+            rootView?.let {
+                Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
+                playCopySound()
+            }
+        }
+
+        generate()
+
+        MetricsManager.register(application)
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        checkForCrashes()
+    }
+
+    private fun initDictionary() {
         random = Random(System.currentTimeMillis())
 
         val reader = InputStreamReader(assets.open("grammar.json"))
@@ -50,35 +75,32 @@ class MainActivity : AppCompatActivity() {
         } finally {
             try {
                 reader.close()
-            } catch (ignored: IOException) {
+            } catch (ignored: Throwable) {
             }
         }
         randomWord = RandomWord(grammar)
-
-        strength?.setOnCheckedChangeListener { _, _ ->
-            generate()
-            playClickSound()
-        }
-        button?.setOnClickListener {
-            generate()
-            playClickSound()
-        }
-
-        generate()
-
-        MetricsManager.register(application)
     }
 
     private fun playClickSound() {
-        MediaPlayer.create(applicationContext, R.raw.click).apply {
-            setOnCompletionListener { it.release() }
-            start()
-        }
+        playSound(R.raw.click)
     }
 
-    public override fun onResume() {
-        super.onResume()
-        checkForCrashes()
+    private fun playCopySound() {
+        playSound(R.raw.copy)
+    }
+
+    private fun playSound(@RawRes sound: Int) {
+        try {
+            val uri = Uri.parse("android.resource://$packageName/$sound")
+            MediaPlayer().apply {
+                setAudioStreamType(AudioManager.STREAM_SYSTEM)
+                setDataSource(applicationContext, uri)
+                setOnCompletionListener { it.release() }
+                prepare()
+                start()
+            }
+        } catch (ignored: Throwable) {
+        }
     }
 
     private fun generate() {
@@ -87,24 +109,24 @@ class MainActivity : AppCompatActivity() {
                     Span(R.color.color1, randomWord.nextWord(6).toFirstUpper()),
                     Span(
                             R.color.color2,
-                            randomDigit(),
-                            randomDigit()
+                            random.digit(),
+                            random.digit()
                     )
             )
             R.id.pass_strong -> listOf(
                     Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
-                    Span(R.color.color2, randomDigit()),
+                    Span(R.color.color2, random.digit()),
                     Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
-                    Span(R.color.color4, randomSymbol())
+                    Span(R.color.color4, random.symbol())
             )
             R.id.pass_very_strong -> listOf(
                     Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
-                    Span(R.color.color2, randomDigit()),
+                    Span(R.color.color2, random.digit()),
                     Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
                     Span(
                             R.color.color4,
-                            randomSymbol(),
-                            randomDigit()
+                            random.symbol(),
+                            random.digit()
                     ),
                     Span(R.color.color5, randomWord.nextWord(3).toUpperCase())
             )
@@ -112,21 +134,8 @@ class MainActivity : AppCompatActivity() {
         }
         val pass = passItems.concatItems(resources)
         password?.text = pass
-        copyStringToClipboard(context = this, string = pass.toString())
 
         trackPasswordStrength()
-    }
-
-    private fun randomDigit(): String = (1 + random.nextInt(9)).toString()
-
-    private fun randomSymbol(): String {
-        val symbols = "!@#\$%&*+=?"
-        val i = random.nextInt(symbols.length)
-        return symbols.substring(i, i + 1)
-    }
-
-    private fun checkForCrashes() {
-        CrashManager.register(this)
     }
 
     private fun trackPasswordStrength() {
@@ -140,41 +149,8 @@ class MainActivity : AppCompatActivity() {
             MetricsManager.trackEvent("Generate Password", properties)
         }
     }
-}
 
-private fun List<Span>.concatItems(resources: Resources): Spannable {
-    var string = ""
-    forEach { string += it.text.concat() }
-    val spannable = SpannableString(string)
-    var position = 0
-    forEach { span ->
-        val start = position
-        val end = position + span.text.concat().length
-        spannable.setSpan(
-                ForegroundColorSpan(resources.getColor(span.color)),
-                start,
-                end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        position = end
-    }
-    return spannable
-}
-
-private fun Array<out String>.concat(): String {
-    var string = ""
-    forEach { string += it }
-    return string
-}
-
-private fun String.toFirstUpper(): String {
-    return substring(0, 1).toUpperCase() + substring(1).toLowerCase()
-}
-
-private fun copyStringToClipboard(context: Context, string: String, toastText: Int = 0) {
-    val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-    clipboardManager.primaryClip = ClipData.newPlainText("", string)
-    if (toastText > 0) {
-        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+    private fun checkForCrashes() {
+        CrashManager.register(this)
     }
 }

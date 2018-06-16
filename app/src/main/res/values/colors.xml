@@ -3,9 +3,10 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#CACACA</color>
     <color name="colorAccent">#EA3CF7</color>
-    <color name="colorPassBack">#FAFAFA</color>
+    <color name="colorPassBack">#FFFFFF</color>
     <color name="colorPassBorder">#BBBCBD</color>
     <color name="colorChar">#3A3B3C</color>
+    <color name="colorBack">#F7F7F7</color>
 
     <color name="color1">#6c5ce7</color>
     <color name="color2">#e17055</color>

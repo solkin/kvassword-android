@@ -1,90 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="@color/colorBack">
 
-    <RadioGroup
-        android:id="@+id/pass_strength"
+    <FrameLayout
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:checkedButton="@id/pass_strong"
-        android:padding="12dp">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/pass_good"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:soundEffectsEnabled="false"
-            android:text="@string/pass_good" />
+            android:orientation="vertical"
+            tools:context=".MainActivity">
 
-        <TextView
-            style="@style/RadioButtonDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/description_pass_good" />
+            <RadioGroup
+                android:id="@+id/pass_strength"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@id/pass_strong"
+                android:padding="12dp">
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/pass_strong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:soundEffectsEnabled="false"
-            android:text="@string/pass_strong" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/pass_good"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:soundEffectsEnabled="false"
+                    android:text="@string/pass_good" />
 
-        <TextView
-            style="@style/RadioButtonDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/description_pass_strong" />
+                <TextView
+                    style="@style/RadioButtonDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_pass_good" />
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/pass_very_strong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:soundEffectsEnabled="false"
-            android:text="@string/pass_very_strong" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/pass_strong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:soundEffectsEnabled="false"
+                    android:text="@string/pass_strong" />
 
-        <TextView
-            style="@style/RadioButtonDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/description_pass_very_strong" />
+                <TextView
+                    style="@style/RadioButtonDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_pass_strong" />
 
-    </RadioGroup>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/pass_very_strong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:soundEffectsEnabled="false"
+                    android:text="@string/pass_very_strong" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="12dp">
+                <TextView
+                    style="@style/RadioButtonDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_pass_very_strong" />
 
-        <TextView
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/pass_back"
-            android:fontFamily="monospace"
-            android:gravity="center_horizontal"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:textColor="@color/colorChar"
-            android:textIsSelectable="true"
-            android:textSize="18sp"
-            android:typeface="monospace"
-            tools:text="Fer2Mic*GAR" />
+            </RadioGroup>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
-    <Button
-        android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:soundEffectsEnabled="false"
-        android:text="@string/next" />
+                <TextView
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pass_back"
+                    android:fontFamily="monospace"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:textColor="@color/colorChar"
+                    android:textIsSelectable="true"
+                    android:textSize="18sp"
+                    android:typeface="monospace"
+                    tools:text="Fer2Mic*GAR" />
 
-</LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:soundEffectsEnabled="false"
+                android:text="@string/next" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</ScrollView>
