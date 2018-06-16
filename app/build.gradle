@@ -5,6 +5,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        release {
+            if (project.hasProperty("storeFile")) storeFile file("$rootDir/" + project.storeFile)
+            if (project.hasProperty("storePassword")) storePassword project.storePassword
+            if (project.hasProperty("keyAlias")) keyAlias project.keyAlias
+            if (project.hasProperty("keyPassword")) keyPassword project.keyPassword
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.tomclaw.kvassword"
