@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp"
     tools:context=".MainActivity">
 
     <RadioGroup
         android:id="@+id/pass_strength"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkedButton="@id/pass_strong">
+        android:checkedButton="@id/pass_strong"
+        android:padding="12dp">
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/pass_good"
@@ -60,8 +60,9 @@
 
         <TextView
             android:id="@+id/password"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:background="@drawable/pass_back"
             android:fontFamily="monospace"
             android:paddingLeft="6dp"

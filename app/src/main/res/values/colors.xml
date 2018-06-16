@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#9c4900</color>
-    <color name="colorPrimaryDark">#793900</color>
-    <color name="colorAccent">#606060</color>
-    <color name="colorPassBack">#CDCECF</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#CACACA</color>
+    <color name="colorAccent">#EA3CF7</color>
+    <color name="colorPassBack">#FAFAFA</color>
     <color name="colorPassBorder">#BBBCBD</color>
     <color name="colorChar">#3A3B3C</color>
 </resources>
