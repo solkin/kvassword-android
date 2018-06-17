@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         button?.setOnClickListener { onClick(it) }
         password?.setOnClickListener {
-            toString().copyToClipboard(context = applicationContext)
+            password?.text.toString().copyToClipboard(context = applicationContext)
             rootView?.let {
                 Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
                 playCopySound()
