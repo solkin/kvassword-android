@@ -7,6 +7,7 @@
     <color name="colorPassBorder">#BBBCBD</color>
     <color name="colorChar">#3A3B3C</color>
     <color name="colorBack">#F7F7F7</color>
+    <color name="colorGrey">#757575</color>
 
     <color name="color1">#6c5ce7</color>
     <color name="color2">#e17055</color>

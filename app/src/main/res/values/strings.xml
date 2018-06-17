@@ -8,4 +8,7 @@
     <string name="description_pass_strong">Still quite simple to remember password, but more strong. Can be used for the most of personal purposes.</string>
     <string name="description_pass_very_strong">Sure, you can remember this password. Very strong password. Can be used for personal and working purposes.</string>
     <string name="copied">Copied!</string>
+    <string name="generate_password">Generate</string>
+    <string name="master_password">Master</string>
+    <string name="password_meter">Strength</string>
 </resources>
