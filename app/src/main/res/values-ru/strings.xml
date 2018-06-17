@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KvassWord</string>
     <string name="next">Следующий</string>
-    <string name="pass_noraml">Нормальный</string>
+    <string name="pass_normal">Нормальный</string>
     <string name="pass_good">Хороший</string>
     <string name="pass_strong">Сильный</string>
     <string name="description_pass_normal">Простой для запоминания пароль. Может быть использован для не очень ответственных целей.</string>
