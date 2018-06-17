@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">KvassWord</string>
     <string name="next">Next</string>
+    <string name="pass_normal">Normal</string>
     <string name="pass_good">Good</string>
     <string name="pass_strong">Strong</string>
-    <string name="pass_very_strong">Very Strong</string>
-    <string name="description_pass_good">Simple to remember password. Can be used for not very responsible purposes.</string>
-    <string name="description_pass_strong">Still quite simple to remember password, but more strong. Can be used for the most of personal purposes.</string>
-    <string name="description_pass_very_strong">Sure, you can remember this password. Very strong password. Can be used for personal and working purposes.</string>
+    <string name="description_pass_normal">Simple to remember password. Can be used for not very responsible purposes.</string>
+    <string name="description_pass_good">Still quite simple to remember password, but more strong. Can be used for the most of personal purposes.</string>
+    <string name="description_pass_strong">Sure, you can remember this password. Very strong password. Can be used for personal and working purposes.</string>
     <string name="copied">Copied!</string>
     <string name="generate_password">Generate</string>
     <string name="master_password">Master</string>

@@ -41,12 +41,12 @@ class MainActivity : AppCompatActivity() {
         strength = findViewById(R.id.pass_strength)
 
         listOf<View>(
+                findViewById(R.id.pass_normal),
+                findViewById(R.id.pass_normal_description),
                 findViewById(R.id.pass_good),
                 findViewById(R.id.pass_good_description),
                 findViewById(R.id.pass_strong),
-                findViewById(R.id.pass_strong_description),
-                findViewById(R.id.pass_very_strong),
-                findViewById(R.id.pass_very_strong_description)
+                findViewById(R.id.pass_strong_description)
         ).forEach { it.setOnClickListener { onClick(it) } }
 
         button?.setOnClickListener { onClick(it) }
@@ -96,14 +96,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun onClick(view: View) {
         when (view.id) {
+            R.id.pass_normal, R.id.pass_normal_description -> {
+                strength?.check(R.id.pass_normal)
+            }
             R.id.pass_good, R.id.pass_good_description -> {
                 strength?.check(R.id.pass_good)
             }
             R.id.pass_strong, R.id.pass_strong_description -> {
                 strength?.check(R.id.pass_strong)
-            }
-            R.id.pass_very_strong, R.id.pass_very_strong_description -> {
-                strength?.check(R.id.pass_very_strong)
             }
         }
         generate()
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun generate() {
         val passItems = when (strength?.checkedRadioButtonId) {
-            R.id.pass_good -> listOf(
+            R.id.pass_normal -> listOf(
                     Span(R.color.color1, randomWord.nextWord(6).toFirstUpper()),
                     Span(
                             R.color.color2,
@@ -142,13 +142,13 @@ class MainActivity : AppCompatActivity() {
                             random.digit()
                     )
             )
-            R.id.pass_strong -> listOf(
+            R.id.pass_good -> listOf(
                     Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
                     Span(R.color.color2, random.digit()),
                     Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
                     Span(R.color.color4, random.symbol())
             )
-            R.id.pass_very_strong -> listOf(
+            R.id.pass_strong -> listOf(
                     Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
                     Span(R.color.color2, random.digit()),
                     Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
@@ -169,9 +169,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun trackPasswordStrength() {
         when (strength?.checkedRadioButtonId) {
+            R.id.pass_normal -> "normal"
             R.id.pass_good -> "good"
             R.id.pass_strong -> "strong"
-            R.id.pass_very_strong -> "very_strong"
             else -> null
         }?.let {
             val properties = hashMapOf("strength" to it)

@@ -24,6 +24,20 @@
                 android:padding="12dp">
 
                 <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/pass_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:soundEffectsEnabled="false"
+                    android:text="@string/pass_normal" />
+
+                <TextView
+                    android:id="@+id/pass_normal_description"
+                    style="@style/RadioButtonDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_pass_normal" />
+
+                <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/pass_good"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -50,20 +64,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/description_pass_strong" />
-
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/pass_very_strong"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:soundEffectsEnabled="false"
-                    android:text="@string/pass_very_strong" />
-
-                <TextView
-                    android:id="@+id/pass_very_strong_description"
-                    style="@style/RadioButtonDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description_pass_very_strong" />
 
             </RadioGroup>
 
