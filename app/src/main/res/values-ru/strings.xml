@@ -8,7 +8,6 @@
     <string name="description_pass_good">Всё ещё лёгкий для запоминания пароль, но намного более сильный. Может быть использован для большинства личных целей.</string>
     <string name="description_pass_strong">Верю, вы сможете запоминить такой пароль. Очень сильный пароль, он может быть использован как для личных, так и рабочих целей.</string>
     <string name="copied">Скопировано!</string>
-    <string name="generate_password">Генерировать</string>
-    <string name="master_password">Мастер-пароль</string>
-    <string name="password_meter">Измеритель</string>
+    <string name="password">Пароль</string>
+    <string name="nickname">Никнейм</string>
 </resources>

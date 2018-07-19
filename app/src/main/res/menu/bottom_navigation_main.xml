@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/password"
         android:enabled="true"
         android:icon="@drawable/pass"
-        android:title="@string/generate_password" />
+        android:title="@string/password" />
     <item
-        android:id="@+id/action_schedules"
+        android:id="@+id/nickname"
         android:enabled="true"
-        android:icon="@drawable/master"
-        android:title="@string/master_password" />
-    <item
-        android:id="@+id/action_music"
-        android:enabled="true"
-        android:icon="@drawable/meter"
-        android:title="@string/password_meter" />
+        android:icon="@drawable/nickname"
+        android:title="@string/nickname" />
 </menu>
