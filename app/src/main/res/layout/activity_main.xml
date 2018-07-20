@@ -1,109 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBack">
 
-    <ScrollView
+    <ViewFlipper
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:context=".MainActivity">
+        <include layout="@layout/password_view" />
 
-            <RadioGroup
-                android:id="@+id/pass_strength"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checkedButton="@id/pass_good"
-                android:padding="12dp">
+        <include layout="@layout/nickname_view" />
 
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/pass_normal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:soundEffectsEnabled="false"
-                    android:text="@string/pass_normal" />
-
-                <TextView
-                    android:id="@+id/pass_normal_description"
-                    style="@style/RadioButtonDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description_pass_normal" />
-
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/pass_good"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:soundEffectsEnabled="false"
-                    android:text="@string/pass_good" />
-
-                <TextView
-                    android:id="@+id/pass_good_description"
-                    style="@style/RadioButtonDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description_pass_good" />
-
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/pass_strong"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:soundEffectsEnabled="false"
-                    android:text="@string/pass_strong" />
-
-                <TextView
-                    android:id="@+id/pass_strong_description"
-                    style="@style/RadioButtonDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description_pass_strong" />
-
-            </RadioGroup>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <TextView
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/pass_back"
-                    android:fontFamily="monospace"
-                    android:gravity="center_horizontal"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="6dp"
-                    android:textColor="@color/colorChar"
-                    android:textIsSelectable="true"
-                    android:textSize="18sp"
-                    android:typeface="monospace"
-                    tools:text="Fer2Mic*GAR" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/button"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:soundEffectsEnabled="false"
-                android:text="@string/next" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </ViewFlipper>
 
     <View
         android:layout_width="match_parent"
@@ -114,10 +25,10 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
         app:itemIconTint="@drawable/nav_item_color_state"
         app:itemTextColor="@drawable/nav_item_color_state"
         app:menu="@menu/bottom_navigation_main" />
