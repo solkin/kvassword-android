@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorBack">
 
-    <ViewFlipper
-        android:id="@+id/root_view"
+    <ViewSwitcher
+        android:id="@+id/switcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -14,7 +14,7 @@
 
         <include layout="@layout/nickname_view" />
 
-    </ViewFlipper>
+    </ViewSwitcher>
 
     <View
         android:layout_width="match_parent"

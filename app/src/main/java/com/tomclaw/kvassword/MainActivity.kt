@@ -5,12 +5,14 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.support.annotation.RawRes
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.ViewSwitcher
 import com.google.gson.GsonBuilder
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
@@ -22,10 +24,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var random: Random
     private lateinit var randomWord: RandomWord
 
-    private var rootView: View? = null
     private var button: Button? = null
     private var password: TextView? = null
     private var strength: RadioGroup? = null
+    private var switcher: ViewSwitcher? = null
+    private var navigation: BottomNavigationView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         initDictionary()
 
-        rootView = findViewById(R.id.root_view)
         button = findViewById(R.id.button)
         password = findViewById(R.id.password)
         strength = findViewById(R.id.pass_strength)
+        switcher = findViewById(R.id.switcher)
+        navigation = findViewById(R.id.bottom_navigation)
 
         listOf<View>(
                 findViewById(R.id.pass_normal),
@@ -52,10 +56,18 @@ class MainActivity : AppCompatActivity() {
         button?.setOnClickListener { onClick(it) }
         password?.setOnClickListener {
             password?.text.toString().copyToClipboard(context = applicationContext)
-            rootView?.let {
+            switcher?.let {
                 Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
                 playCopySound()
             }
+        }
+
+        navigation?.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.password -> switcher?.displayedChild = 0
+                R.id.nickname -> switcher?.displayedChild = 1
+            }
+            true
         }
 
         if (restoredPassword == null) {
