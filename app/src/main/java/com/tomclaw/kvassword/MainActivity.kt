@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var random: Random
     private lateinit var randomWord: RandomWord
 
-    private var button: Button? = null
+    private var nextPassword: Button? = null
     private var password: TextView? = null
     private var strength: RadioGroup? = null
     private var switcher: ViewSwitcher? = null
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         initDictionary()
 
-        button = findViewById(R.id.button)
+        nextPassword = findViewById(R.id.next_password)
         password = findViewById(R.id.password)
         strength = findViewById(R.id.pass_strength)
         switcher = findViewById(R.id.switcher)
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 findViewById(R.id.pass_strong_description)
         ).forEach { it.setOnClickListener { onClick(it) } }
 
-        button?.setOnClickListener { onClick(it) }
+        nextPassword?.setOnClickListener { onClick(it) }
         password?.setOnClickListener {
             password?.text.toString().copyToClipboard(context = applicationContext)
             switcher?.let {
