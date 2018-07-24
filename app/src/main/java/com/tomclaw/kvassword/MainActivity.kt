@@ -25,7 +25,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var randomWord: RandomWord
 
     private var nextPassword: Button? = null
+    private var nextNickname: Button? = null
     private var password: TextView? = null
+    private var nickname: TextView? = null
     private var strength: RadioGroup? = null
     private var switcher: ViewSwitcher? = null
     private var navigation: BottomNavigationView? = null
@@ -39,7 +41,9 @@ class MainActivity : AppCompatActivity() {
         initDictionary()
 
         nextPassword = findViewById(R.id.next_password)
+        nextNickname = findViewById(R.id.next_nickname)
         password = findViewById(R.id.password)
+        nickname = findViewById(R.id.nickname)
         strength = findViewById(R.id.pass_strength)
         switcher = findViewById(R.id.switcher)
         navigation = findViewById(R.id.bottom_navigation)
@@ -51,9 +55,10 @@ class MainActivity : AppCompatActivity() {
                 findViewById(R.id.pass_good_description),
                 findViewById(R.id.pass_strong),
                 findViewById(R.id.pass_strong_description)
-        ).forEach { it.setOnClickListener { onClick(it) } }
+        ).forEach { it.setOnClickListener { onNextPasswordClick(it) } }
 
-        nextPassword?.setOnClickListener { onClick(it) }
+        nextPassword?.setOnClickListener { onNextPasswordClick(it) }
+        nextNickname?.setOnClickListener { onNextNicknameClick() }
         password?.setOnClickListener {
             password?.text.toString().copyToClipboard(context = applicationContext)
             switcher?.let {
@@ -71,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (restoredPassword == null) {
-            generate()
+            generatePassword()
         } else {
             password?.text = restoredPassword
         }
@@ -106,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         randomWord = RandomWord(grammar)
     }
 
-    private fun onClick(view: View) {
+    private fun onNextPasswordClick(view: View) {
         when (view.id) {
             R.id.pass_normal, R.id.pass_normal_description -> {
                 strength?.check(R.id.pass_normal)
@@ -118,7 +123,12 @@ class MainActivity : AppCompatActivity() {
                 strength?.check(R.id.pass_strong)
             }
         }
-        generate()
+        generatePassword()
+        playClickSound()
+    }
+
+    private fun onNextNicknameClick() {
+        generateNickname()
         playClickSound()
     }
 
@@ -144,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun generate() {
+    private fun generatePassword() {
         val passItems = when (strength?.checkedRadioButtonId) {
             R.id.pass_normal -> listOf(
                     Span(R.color.color1, randomWord.nextWord(6).toFirstUpper()),
@@ -177,6 +187,17 @@ class MainActivity : AppCompatActivity() {
         password?.text = pass
 
         trackPasswordStrength()
+    }
+
+    private fun generateNickname() {
+        val nickItems = listOf(
+                Span(R.color.color1, randomWord.nextWord(3 + random.nextInt(3)).toFirstUpper()),
+                Span(R.color.color1, randomWord.nextWord(3 + random.nextInt(2)).toLowerCase())
+        )
+        val nick = nickItems.concatItems(resources)
+        nickname?.text = nick
+
+        MetricsManager.trackEvent("Generate Nickname")
     }
 
     private fun trackPasswordStrength() {
