@@ -4,6 +4,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.ColorRes
 import android.support.annotation.RawRes
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
@@ -157,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     private fun generatePassword() {
         val passItems = when (strength?.checkedRadioButtonId) {
             R.id.pass_normal -> listOf(
-                    Span(R.color.color1, randomWord.nextWord(6).toFirstUpper()),
+                    randomWord.nextWord(6).toFirstUpper().toSpan(R.color.color1),
                     Span(
                             R.color.color2,
                             random.digit(),
@@ -165,21 +166,21 @@ class MainActivity : AppCompatActivity() {
                     )
             )
             R.id.pass_good -> listOf(
-                    Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
-                    Span(R.color.color2, random.digit()),
-                    Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
-                    Span(R.color.color4, random.symbol())
+                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
+                    random.digit().toSpan(R.color.color2),
+                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
+                    random.symbol().toSpan(R.color.color4)
             )
             R.id.pass_strong -> listOf(
-                    Span(R.color.color1, randomWord.nextWord(3).toFirstUpper()),
-                    Span(R.color.color2, random.digit()),
-                    Span(R.color.color3, randomWord.nextWord(3).toFirstUpper()),
+                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
+                    random.digit().toSpan(R.color.color2),
+                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
                     Span(
                             R.color.color4,
                             random.symbol(),
                             random.digit()
                     ),
-                    Span(R.color.color5, randomWord.nextWord(3).toUpperCase())
+                    randomWord.nextWord(3).toUpperCase().toSpan(R.color.color5)
             )
             else -> throw IllegalStateException("Invalid selection")
         }
@@ -190,12 +191,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateNickname() {
-        val nickItems = listOf(
-                Span(R.color.color1, randomWord.nextWord(3 + random.nextInt(3)).toFirstUpper()),
-                Span(R.color.color1, randomWord.nextWord(3 + random.nextInt(2)).toLowerCase())
-        )
-        val nick = nickItems.concatItems(resources)
-        nickname?.text = nick
+        val nickLength = 3 + random.nextInt(4)
+        nickname?.text = randomWord.nextWord(nickLength)
+                .toFirstUpper()
+                .toSpan(R.color.color1)
+                .toList()
+                .concatItems(resources)
 
         MetricsManager.trackEvent("Generate Nickname")
     }
@@ -215,6 +216,11 @@ class MainActivity : AppCompatActivity() {
     private fun checkForCrashes() {
         CrashManager.register(this)
     }
+
+    private fun String.toSpan(@ColorRes color: Int) = Span(color, this)
+
+    private fun Span.toList() = listOf(this)
+
 }
 
 private const val KEY_PASSWORD = "password"
