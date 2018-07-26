@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         val restoredPassword = savedInstanceState?.getCharSequence(KEY_PASSWORD)
         val restoredNickname = savedInstanceState?.getCharSequence(KEY_NICKNAME)
+        val selectedItemId = savedInstanceState?.getInt(KEY_NAVIGATION) ?: NAVIGATION_INVALID
 
         initDictionary()
 
@@ -77,6 +78,8 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        if (selectedItemId >= 0) navigation?.selectedItemId = selectedItemId
+
         if (restoredPassword == null) {
             generatePassword()
             generateNickname()
@@ -97,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putCharSequence(KEY_PASSWORD, password?.text)
         outState.putCharSequence(KEY_NICKNAME, nickname?.text)
+        outState.putInt(KEY_NAVIGATION, navigation?.selectedItemId ?: NAVIGATION_INVALID)
     }
 
     private fun initDictionary() {
@@ -195,7 +199,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateNickname() {
-        val nickLength = 3 + random.nextInt(4)
+        val nickLength = 5 + random.nextInt(5)
         nickname?.text = randomWord.nextWord(nickLength)
                 .toFirstUpper()
                 .toSpan(R.color.color1)
@@ -228,6 +232,8 @@ class MainActivity : AppCompatActivity() {
 }
 
 private const val DICTIONARY = "grammar.json"
+private const val NAVIGATION_INVALID = -1
 
 private const val KEY_PASSWORD = "password"
 private const val KEY_NICKNAME = "nickname"
+private const val KEY_NAVIGATION = "navigation"
