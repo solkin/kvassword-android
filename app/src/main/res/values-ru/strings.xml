@@ -10,6 +10,7 @@
     <string name="copied">Скопировано!</string>
     <string name="password">Пароль</string>
     <string name="nickname">Никнейм</string>
+    <string name="description_nickname">Иногда сложно придумать звучный и необычный никнейм. У KvassWord отличная фантазия!</string>
     <string name="information">Информация</string>
     <string name="vendor">TomClaw Software</string>
     <string name="rate_app">Оценить приложение</string>
