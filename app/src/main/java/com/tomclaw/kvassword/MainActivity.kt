@@ -151,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         } catch (ex: android.content.ActivityNotFoundException) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
         }
+        MetricsManager.trackEvent("Open rate app")
     }
 
     private fun onAllProjectsClick() {
@@ -159,6 +160,7 @@ class MainActivity : AppCompatActivity() {
         } catch (ex: android.content.ActivityNotFoundException) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")))
         }
+        MetricsManager.trackEvent("Open all projects")
     }
 
     private fun playClickSound() {
