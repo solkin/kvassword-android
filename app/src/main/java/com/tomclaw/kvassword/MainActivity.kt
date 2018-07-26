@@ -1,5 +1,7 @@
 package com.tomclaw.kvassword
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -19,6 +21,7 @@ import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
 import java.io.InputStreamReader
 import java.util.Random
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,6 +53,10 @@ class MainActivity : AppCompatActivity() {
         strength = findViewById(R.id.pass_strength)
         flipper = findViewById(R.id.flipper)
         navigation = findViewById(R.id.bottom_navigation)
+
+        findViewById<TextView>(R.id.app_version).text = provideVersion()
+        findViewById<TextView>(R.id.rate_app).setOnClickListener { onRateAppClick() }
+        findViewById<TextView>(R.id.all_projects).setOnClickListener { onAllProjectsClick() }
 
         listOf<View>(
                 findViewById(R.id.pass_normal),
@@ -142,6 +149,23 @@ class MainActivity : AppCompatActivity() {
         playClickSound()
     }
 
+    private fun onRateAppClick() {
+        val appPackageName = packageName
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+        } catch (ex: android.content.ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+        }
+    }
+
+    private fun onAllProjectsClick() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:TomClaw+Software")))
+        } catch (ex: android.content.ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")))
+        }
+    }
+
     private fun playClickSound() {
         playSound(R.raw.click)
     }
@@ -224,6 +248,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkForCrashes() {
         CrashManager.register(this)
+    }
+
+    private fun provideVersion(): String {
+        try {
+            val info = packageManager.getPackageInfo(packageName, 0)
+            return resources.getString(R.string.app_version, info.versionName, info.versionCode)
+        } catch (ignored: PackageManager.NameNotFoundException) {
+        }
+        return ""
     }
 
     private fun String.toSpan(@ColorRes color: Int) = Span(color, this)

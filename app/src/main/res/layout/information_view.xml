@@ -47,7 +47,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/rate_application"
+                    android:id="@+id/rate_app"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
