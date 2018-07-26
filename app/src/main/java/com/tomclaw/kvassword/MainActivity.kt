@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val restoredPassword = savedInstanceState?.getCharSequence(KEY_PASSWORD)
+        val restoredNickname = savedInstanceState?.getCharSequence(KEY_NICKNAME)
 
         initDictionary()
 
@@ -78,8 +79,10 @@ class MainActivity : AppCompatActivity() {
 
         if (restoredPassword == null) {
             generatePassword()
+            generateNickname()
         } else {
             password?.text = restoredPassword
+            nickname?.text = restoredNickname
         }
 
         MetricsManager.register(application)
@@ -93,12 +96,13 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putCharSequence(KEY_PASSWORD, password?.text)
+        outState.putCharSequence(KEY_NICKNAME, nickname?.text)
     }
 
     private fun initDictionary() {
         random = Random(System.currentTimeMillis())
 
-        val reader = InputStreamReader(assets.open("grammar.json"))
+        val reader = InputStreamReader(assets.open(DICTIONARY))
         val grammar: Grammar
         try {
             val gson = GsonBuilder().create()
@@ -223,4 +227,7 @@ class MainActivity : AppCompatActivity() {
 
 }
 
+private const val DICTIONARY = "grammar.json"
+
 private const val KEY_PASSWORD = "password"
+private const val KEY_NICKNAME = "nickname"
