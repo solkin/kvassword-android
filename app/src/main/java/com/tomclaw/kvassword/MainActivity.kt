@@ -219,7 +219,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateNickname() {
-        val nickLength = 5 + random.nextInt(5)
+        val nickLength = 4 + random.nextInt(5)
         nickname?.text = randomWord.nextWord(nickLength)
                 .toFirstUpper()
                 .toSpan(R.color.color1)
