@@ -69,13 +69,8 @@ class MainActivity : AppCompatActivity() {
 
         nextPassword?.setOnClickListener { onNextPasswordClick(it) }
         nextNickname?.setOnClickListener { onNextNicknameClick() }
-        password?.setOnClickListener {
-            password?.text.toString().copyToClipboard(context = applicationContext)
-            flipper?.let {
-                Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
-                playCopySound()
-            }
-        }
+        password?.copyClickListener()
+        nickname?.copyClickListener()
 
         navigation?.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -262,6 +257,16 @@ class MainActivity : AppCompatActivity() {
     private fun String.toSpan(@ColorRes color: Int) = Span(color, this)
 
     private fun Span.toList() = listOf(this)
+
+    private fun TextView.copyClickListener() {
+        setOnClickListener {
+            (it as TextView?)?.text.toString().copyToClipboard(context = applicationContext)
+            flipper?.let {
+                Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
+                playCopySound()
+            }
+        }
+    }
 
 }
 
