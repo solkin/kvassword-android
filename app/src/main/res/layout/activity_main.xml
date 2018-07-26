@@ -5,16 +5,19 @@
     android:layout_height="match_parent"
     android:background="@color/colorBack">
 
-    <ViewSwitcher
-        android:id="@+id/switcher"
+    <ViewFlipper
+        android:id="@+id/flipper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="56dp">
 
         <include layout="@layout/password_view" />
 
         <include layout="@layout/nickname_view" />
 
-    </ViewSwitcher>
+        <include layout="@layout/information_view" />
+
+    </ViewFlipper>
 
     <View
         android:layout_width="match_parent"

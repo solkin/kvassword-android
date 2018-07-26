@@ -13,7 +13,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.ViewSwitcher
+import android.widget.ViewFlipper
 import com.google.gson.GsonBuilder
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var password: TextView? = null
     private var nickname: TextView? = null
     private var strength: RadioGroup? = null
-    private var switcher: ViewSwitcher? = null
+    private var flipper: ViewFlipper? = null
     private var navigation: BottomNavigationView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         nickname = findViewById(R.id.nickname)
         strength = findViewById(R.id.pass_strength)
-        switcher = findViewById(R.id.switcher)
+        flipper = findViewById(R.id.flipper)
         navigation = findViewById(R.id.bottom_navigation)
 
         listOf<View>(
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         nextNickname?.setOnClickListener { onNextNicknameClick() }
         password?.setOnClickListener {
             password?.text.toString().copyToClipboard(context = applicationContext)
-            switcher?.let {
+            flipper?.let {
                 Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
                 playCopySound()
             }
@@ -72,8 +72,9 @@ class MainActivity : AppCompatActivity() {
 
         navigation?.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.password -> switcher?.displayedChild = 0
-                R.id.nickname -> switcher?.displayedChild = 1
+                R.id.password -> flipper?.displayedChild = 0
+                R.id.nickname -> flipper?.displayedChild = 1
+                R.id.information -> flipper?.displayedChild = 2
             }
             true
         }

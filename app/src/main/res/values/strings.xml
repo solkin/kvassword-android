@@ -10,4 +10,10 @@
     <string name="copied">Copied!</string>
     <string name="password">Password</string>
     <string name="nickname">Nickname</string>
+    <string name="information">Information</string>
+    <string name="vendor">TomClaw Software</string>
+    <string name="rate_app">Rate App</string>
+    <string name="other_projects">Other Projects</string>
+    <string name="info_extended">Written by Igor Solkin.\nFor any questions please contact me by e-mail\ninbox@tomclaw.com</string>
+    <string name="app_description">I know that many people write passwords on stickers, someone stores them in the file "passwords.txt".\nSome use passwords like "qwerty2", others have one password for all resources.\nThe only correct solution is to create strong, but memorable passwords.\nAnd KvassWord doing a great job!</string>
 </resources>

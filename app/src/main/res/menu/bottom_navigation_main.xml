@@ -10,4 +10,9 @@
         android:enabled="true"
         android:icon="@drawable/nickname"
         android:title="@string/nickname" />
+    <item
+        android:id="@+id/information"
+        android:enabled="true"
+        android:icon="@drawable/information"
+        android:title="@string/information" />
 </menu>
