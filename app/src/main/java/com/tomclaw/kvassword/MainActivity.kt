@@ -45,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initDictionary()
+
         val restoredPassword = savedInstanceState?.getCharSequence(KEY_PASSWORD)
         val restoredNickname = savedInstanceState?.getCharSequence(KEY_NICKNAME)
         val selectedItemId = savedInstanceState?.getInt(KEY_NAVIGATION) ?: NAVIGATION_INVALID
@@ -102,8 +104,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         MetricsManager.register(application)
-
-        initDictionary()
     }
 
     public override fun onResume() {
