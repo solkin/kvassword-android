@@ -5,21 +5,34 @@
     android:layout_height="match_parent"
     android:background="@color/colorBack">
 
-    <ViewFlipper
-        android:id="@+id/flipper"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inAnimation="@android:anim/fade_in"
-        android:animateFirstView="true"
         android:paddingBottom="56dp">
 
-        <include layout="@layout/password_view" />
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <include layout="@layout/nickname_view" />
+            <ViewFlipper
+                android:id="@+id/flipper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateFirstView="true"
+                android:inAnimation="@android:anim/fade_in">
 
-        <include layout="@layout/information_view" />
+                <include layout="@layout/password_view" />
 
-    </ViewFlipper>
+                <include layout="@layout/nickname_view" />
+
+                <include layout="@layout/information_view" />
+
+            </ViewFlipper>
+
+        </android.support.design.widget.CoordinatorLayout>
+
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

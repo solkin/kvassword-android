@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.annotation.ColorRes
 import android.support.annotation.RawRes
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var strength: RadioGroup? = null
     private var flipper: ViewFlipper? = null
     private var navigation: BottomNavigationView? = null
+    private var coordinator: CoordinatorLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         strength = findViewById(R.id.pass_strength)
         flipper = findViewById(R.id.flipper)
         navigation = findViewById(R.id.bottom_navigation)
+        coordinator = findViewById(R.id.coordinator)
 
         findViewById<TextView>(R.id.app_version).text = provideVersion()
         findViewById<TextView>(R.id.rate_app).setOnClickListener { onRateAppClick() }
@@ -263,7 +266,7 @@ class MainActivity : AppCompatActivity() {
     private fun TextView.copyClickListener() {
         setOnClickListener {
             (it as TextView?)?.text.toString().copyToClipboard(context = applicationContext)
-            flipper?.let {
+            coordinator?.let {
                 Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
                 playCopySound()
             }
