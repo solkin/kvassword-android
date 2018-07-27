@@ -9,6 +9,8 @@
         android:id="@+id/flipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:inAnimation="@android:anim/fade_in"
+        android:animateFirstView="true"
         android:paddingBottom="56dp">
 
         <include layout="@layout/password_view" />
