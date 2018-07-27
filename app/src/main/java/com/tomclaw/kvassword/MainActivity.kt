@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity() {
         val restoredNickname = savedInstanceState?.getCharSequence(KEY_NICKNAME)
         val selectedItemId = savedInstanceState?.getInt(KEY_NAVIGATION) ?: NAVIGATION_INVALID
 
-        initDictionary()
-
         nextPassword = findViewById(R.id.next_password)
         nextNickname = findViewById(R.id.next_nickname)
         password = findViewById(R.id.password)
@@ -104,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         MetricsManager.register(application)
+
+        initDictionary()
     }
 
     public override fun onResume() {
