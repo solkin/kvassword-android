@@ -13,6 +13,9 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
+import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -61,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.rate_app).setOnClickListener { onRateAppClick() }
         findViewById<TextView>(R.id.all_projects).setOnClickListener { onAllProjectsClick() }
 
+        flipper?.initFadeAnimations()
+
         listOf<View>(
                 findViewById(R.id.pass_normal),
                 findViewById(R.id.pass_normal_description),
@@ -76,10 +81,14 @@ class MainActivity : AppCompatActivity() {
         nickname?.copyClickListener()
 
         navigation?.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.password -> flipper?.displayedChild = 0
-                R.id.nickname -> flipper?.displayedChild = 1
-                R.id.information -> flipper?.displayedChild = 2
+            val position = when (item.itemId) {
+                R.id.password -> 0
+                R.id.nickname -> 1
+                R.id.information -> 2
+                else -> throw IllegalStateException()
+            }
+            if (flipper?.displayedChild != position) {
+                flipper?.displayedChild = position
             }
             true
         }
@@ -270,6 +279,19 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
                 playCopySound()
             }
+        }
+    }
+
+    private fun ViewFlipper.initFadeAnimations() {
+        inAnimation = AlphaAnimation(0f, 1f).apply {
+            interpolator = DecelerateInterpolator()
+            startOffset = 100
+            duration = 200
+        }
+
+        outAnimation = AlphaAnimation(1f, 0f).apply {
+            interpolator = AccelerateInterpolator()
+            duration = 200
         }
     }
 
