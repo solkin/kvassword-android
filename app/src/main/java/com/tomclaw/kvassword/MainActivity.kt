@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 findViewById(R.id.pass_good_description),
                 findViewById(R.id.pass_strong),
                 findViewById(R.id.pass_strong_description)
-        ).forEach { it.setOnClickListener { onNextPasswordClick(it) } }
+        ).forEach { view -> view.setOnClickListener { onNextPasswordClick(it) } }
 
         nextPassword?.setOnClickListener { onNextPasswordClick(it) }
         nextNickname?.setOnClickListener { onNextNicknameClick() }
