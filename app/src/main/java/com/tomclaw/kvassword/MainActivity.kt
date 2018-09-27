@@ -6,12 +6,12 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.annotation.RawRes
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.ColorRes
+import androidx.annotation.RawRes
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
     private var nickname: TextView? = null
     private var strength: RadioGroup? = null
     private var flipper: ViewFlipper? = null
-    private var navigation: BottomNavigationView? = null
-    private var coordinator: CoordinatorLayout? = null
+    private var navigation: com.google.android.material.bottomnavigation.BottomNavigationView? = null
+    private var coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -276,7 +276,7 @@ class MainActivity : AppCompatActivity() {
         setOnClickListener {
             (it as TextView?)?.text.toString().copyToClipboard(context = applicationContext)
             coordinator?.let {
-                Snackbar.make(it, R.string.copied, Snackbar.LENGTH_SHORT).show()
+                com.google.android.material.snackbar.Snackbar.make(it, R.string.copied, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
                 playCopySound()
             }
         }
