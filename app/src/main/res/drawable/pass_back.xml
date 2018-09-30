@@ -6,7 +6,7 @@
         android:dashWidth="5dp"
         android:dashGap="5dp"
         android:color="@color/colorPassBorder" />
-    <corners android:radius="3dp" />
+    <corners android:radius="@dimen/default_radius" />
     <padding
         android:bottom="4dp"
         android:left="4dp"

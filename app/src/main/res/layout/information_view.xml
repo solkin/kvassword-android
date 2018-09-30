@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,12 +26,12 @@
 
         </FrameLayout>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
+            android:layout_marginBottom="18dp"
             android:fontFamily="sans-serif-condensed"
             android:text="@string/app_description"
             android:textSize="14sp" />
@@ -49,25 +50,28 @@
 
                 <Button
                     android:id="@+id/rate_app"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="@string/rate_app" />
+                    android:text="@string/rate_app"
+                    app:cornerRadius="@dimen/default_radius" />
 
                 <Button
                     android:id="@+id/all_projects"
-                    style="@style/Widget.AppCompat.Button"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="@string/other_projects" />
+                    android:text="@string/other_projects"
+                    app:cornerRadius="@dimen/default_radius" />
+
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
