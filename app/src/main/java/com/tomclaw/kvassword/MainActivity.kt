@@ -6,12 +6,6 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import androidx.annotation.ColorRes
-import androidx.annotation.RawRes
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -20,6 +14,9 @@ import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.annotation.ColorRes
+import androidx.annotation.RawRes
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
