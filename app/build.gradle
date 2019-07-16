@@ -13,13 +13,13 @@ android {
             if (project.hasProperty("keyPassword")) keyPassword project.keyPassword
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.tomclaw.kvassword"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 1000
-        versionName "1.3"
+        versionName "1.4"
         manifestPlaceholders = [
                 HOCKEYAPP_APP_ID: "3072f86b5b3a448088810e1f00948f82"
         ]
