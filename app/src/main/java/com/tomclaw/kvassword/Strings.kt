@@ -48,5 +48,5 @@ fun List<Span>.concatItems(resources: Resources): Spannable {
 
 fun String.copyToClipboard(context: Context) {
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboardManager.primaryClip = ClipData.newPlainText("", this)
+    clipboardManager.setPrimaryClip(ClipData.newPlainText("", this))
 }
