@@ -18,6 +18,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
+import com.tomclaw.kvassword.bananalytics.Bananalytics
+import com.tomclaw.kvassword.bananalytics.InfoProvider
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
 import java.io.InputStreamReader
@@ -28,6 +30,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var random: Random
     private lateinit var randomWord: RandomWord
+    private val gson = GsonBuilder().create()
+
+    private lateinit var bananalytics: Bananalytics
 
     private var nextPassword: Button? = null
     private var nextNickname: Button? = null
@@ -40,6 +45,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        bananalytics = Bananalytics(filesDir, InfoProvider(this), gson)
+
         setContentView(R.layout.activity_main)
 
         initDictionary()
@@ -101,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         MetricsManager.register(application)
+        bananalytics.trackEvent("start")
     }
 
     public override fun onResume() {
@@ -121,7 +130,6 @@ class MainActivity : AppCompatActivity() {
         val reader = InputStreamReader(assets.open(DICTIONARY))
         val grammar: Grammar
         try {
-            val gson = GsonBuilder().create()
             grammar = gson.fromJson(reader, Grammar::class.java)
         } finally {
             try {
@@ -161,6 +169,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
         }
         MetricsManager.trackEvent("Open rate app")
+        bananalytics.trackEvent("Open rate app")
     }
 
     private fun onAllProjectsClick() {
@@ -170,6 +179,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")))
         }
         MetricsManager.trackEvent("Open all projects")
+        bananalytics.trackEvent("Open all projects")
     }
 
     private fun playClickSound() {
@@ -236,8 +246,8 @@ class MainActivity : AppCompatActivity() {
                 .toSpan(R.color.color1)
                 .toList()
                 .concatItems(resources)
-
         MetricsManager.trackEvent("Generate Nickname")
+        bananalytics.trackEvent("Generate Nickname")
     }
 
     private fun trackPasswordStrength() {
@@ -249,6 +259,7 @@ class MainActivity : AppCompatActivity() {
         }?.let {
             val properties = hashMapOf("strength" to it)
             MetricsManager.trackEvent("Generate Password", properties)
+            bananalytics.trackEvent("Generate Password", gson.toJson(properties))
         }
     }
 
