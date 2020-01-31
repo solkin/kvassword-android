@@ -146,13 +146,12 @@ class Bananalytics(
     private fun createEvent(
             event: String,
             payload: String?,
-            time: Long = System.currentTimeMillis()
-    ) = AnalyticsEvent(event, payload, TimeUnit.MILLISECONDS.toSeconds(time))
+            time: Long = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+    ) = AnalyticsEvent(event, payload, time)
 
 
     @Throws(IOException::class)
     fun executePost(urlString: String, data: String): String {
-        var responseStream: InputStream? = null
         var connection: HttpURLConnection? = null
         return try {
             connection = (URL(urlString).openConnection() as HttpURLConnection).apply {
@@ -172,7 +171,6 @@ class Bananalytics(
             throw IOException(ex)
         } finally {
             try {
-                responseStream.safeClose()
                 connection?.disconnect()
             } catch (ignored: IOException) {
             }
