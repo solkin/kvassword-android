@@ -2,9 +2,11 @@ package com.tomclaw.kvassword
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -17,13 +19,14 @@ import android.widget.ViewFlipper
 import androidx.annotation.ColorRes
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import com.tomclaw.kvassword.bananalytics.Bananalytics
 import com.tomclaw.kvassword.bananalytics.InfoProvider
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.metrics.MetricsManager
 import java.io.InputStreamReader
-import java.util.Random
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -194,7 +197,15 @@ class MainActivity : AppCompatActivity() {
         try {
             val uri = Uri.parse("android.resource://$packageName/$sound")
             MediaPlayer().apply {
-                setAudioStreamType(AudioManager.STREAM_SYSTEM)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    @Suppress("DEPRECATION")
+                    setAudioStreamType(AudioManager.STREAM_SYSTEM)
+                } else {
+                    setAudioAttributes(
+                            AudioAttributes.Builder()
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                    .build())
+                }
                 setDataSource(applicationContext, uri)
                 setOnCompletionListener { it.release() }
                 prepare()
@@ -229,7 +240,7 @@ class MainActivity : AppCompatActivity() {
                             random.symbol(),
                             random.digit()
                     ),
-                    randomWord.nextWord(3).toUpperCase().toSpan(R.color.color5)
+                    randomWord.nextWord(3).toUpperCase(Locale.getDefault()).toSpan(R.color.color5)
             )
             else -> throw IllegalStateException("Invalid selection")
         }
@@ -270,7 +281,14 @@ class MainActivity : AppCompatActivity() {
     private fun provideVersion(): String {
         try {
             val info = packageManager.getPackageInfo(packageName, 0)
-            return resources.getString(R.string.app_version, info.versionName, info.versionCode)
+            val version: Long
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                @Suppress("DEPRECATION")
+                version = info.versionCode.toLong()
+            } else {
+                version = info.longVersionCode
+            }
+            return resources.getString(R.string.app_version, info.versionName, version)
         } catch (ignored: PackageManager.NameNotFoundException) {
         }
         return ""
@@ -283,8 +301,8 @@ class MainActivity : AppCompatActivity() {
     private fun TextView.copyClickListener() {
         setOnClickListener {
             (it as TextView?)?.text.toString().copyToClipboard(context = applicationContext)
-            coordinator?.let {
-                com.google.android.material.snackbar.Snackbar.make(it, R.string.copied, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
+            coordinator?.let { cl ->
+                Snackbar.make(cl, R.string.copied, Snackbar.LENGTH_SHORT).show()
                 playCopySound()
             }
         }
