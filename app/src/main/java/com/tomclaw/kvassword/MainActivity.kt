@@ -203,7 +203,8 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     setAudioAttributes(
                             AudioAttributes.Builder()
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                                     .build())
                 }
                 setDataSource(applicationContext, uri)
