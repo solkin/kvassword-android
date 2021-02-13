@@ -96,13 +96,11 @@ class RandomWord(private val grammar: Grammar) {
     }
 
     private fun backtrack(theWord: String, numberChars: Int): String {
-        var theWord = theWord
-        theWord = theWord.substring(0, theWord.length - numberChars)
-        return theWord
+        return theWord.substring(0, theWord.length - numberChars)
     }
 
     private fun getLookupIndex(theWord: String, lookupArray: Array<String>): Int {
         val lookupCharacters = theWord.substring(theWord.length - 2)
-        return Arrays.asList(*lookupArray).indexOf(lookupCharacters)
+        return listOf(*lookupArray).indexOf(lookupCharacters)
     }
 }
