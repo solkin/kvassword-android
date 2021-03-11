@@ -16,12 +16,12 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.tomclaw.kvassword"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 1000
         versionName "1.7"
         manifestPlaceholders = [
-                HOCKEYAPP_APP_ID: "3072f86b5b3a448088810e1f00948f82"
+                APPCENTER_APP_ID: "3072f86b-5b3a-4480-8881-0e1f00948f82"
         ]
     }
     buildTypes {
@@ -42,5 +42,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'net.hockeyapp.android:HockeySDK:5.1.1'
+    implementation "com.microsoft.appcenter:appcenter-analytics:4.1.0"
+    implementation "com.microsoft.appcenter:appcenter-crashes:4.1.0"
 }

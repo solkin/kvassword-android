@@ -1,5 +1,7 @@
 package com.tomclaw.kvassword
 
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
@@ -8,6 +10,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -21,12 +24,15 @@ import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.analytics.Analytics.trackEvent
+import com.microsoft.appcenter.crashes.Crashes
 import com.tomclaw.kvassword.bananalytics.Bananalytics
 import com.tomclaw.kvassword.bananalytics.InfoProvider
-import net.hockeyapp.android.CrashManager
-import net.hockeyapp.android.metrics.MetricsManager
 import java.io.InputStreamReader
-import java.util.*
+import java.util.Locale
+import java.util.Random
 
 
 class MainActivity : AppCompatActivity() {
@@ -111,13 +117,32 @@ class MainActivity : AppCompatActivity() {
             nickname?.text = restoredNickname
         }
 
-        MetricsManager.register(application)
+        register(application)
         bananalytics.trackEvent("start")
     }
 
-    public override fun onResume() {
-        super.onResume()
-        checkForCrashes()
+    fun register(application: Application) {
+        val appIdentifier = getAppIdentifier(application.applicationContext)
+        require(!(appIdentifier == null || appIdentifier.isEmpty())) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
+        AppCenter.start(getApplication(), appIdentifier, Analytics::class.java, Crashes::class.java)
+    }
+
+    private fun getAppIdentifier(context: Context): String? {
+        val appIdentifier = getManifestString(context, APP_IDENTIFIER_KEY)
+        require(!TextUtils.isEmpty(appIdentifier)) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
+        return appIdentifier
+    }
+
+    private fun getManifestString(context: Context, key: String): String? {
+        return getManifestBundle(context).getString(key)
+    }
+
+    private fun getManifestBundle(context: Context): Bundle {
+        return try {
+            context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA).metaData
+        } catch (e: PackageManager.NameNotFoundException) {
+            throw RuntimeException(e)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -171,7 +196,7 @@ class MainActivity : AppCompatActivity() {
         } catch (ex: android.content.ActivityNotFoundException) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
         }
-        MetricsManager.trackEvent("Open rate app")
+        trackEvent("Open rate app")
         bananalytics.trackEvent("Open rate app")
     }
 
@@ -181,7 +206,7 @@ class MainActivity : AppCompatActivity() {
         } catch (ex: android.content.ActivityNotFoundException) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")))
         }
-        MetricsManager.trackEvent("Open all projects")
+        trackEvent("Open all projects")
         bananalytics.trackEvent("Open all projects")
     }
 
@@ -258,7 +283,7 @@ class MainActivity : AppCompatActivity() {
                 .toSpan(R.color.color1)
                 .toList()
                 .concatItems(resources)
-        MetricsManager.trackEvent("Generate Nickname")
+        trackEvent("Generate Nickname")
         bananalytics.trackEvent("Generate Nickname")
     }
 
@@ -270,13 +295,9 @@ class MainActivity : AppCompatActivity() {
             else -> null
         }?.let {
             val properties = hashMapOf("strength" to it)
-            MetricsManager.trackEvent("Generate Password", properties)
+            trackEvent("Generate Password", properties)
             bananalytics.trackEvent("Generate Password", gson.toJson(properties))
         }
-    }
-
-    private fun checkForCrashes() {
-        CrashManager.register(this)
     }
 
     private fun provideVersion(): String {
@@ -330,3 +351,5 @@ private const val NAVIGATION_INVALID = -1
 private const val KEY_PASSWORD = "password"
 private const val KEY_NICKNAME = "nickname"
 private const val KEY_NAVIGATION = "navigation"
+
+private const val APP_IDENTIFIER_KEY = "net.hockeyapp.android.appIdentifier"
