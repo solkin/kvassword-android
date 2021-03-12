@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         return appIdentifier
     }
 
+    @Suppress("SameParameterValue")
     private fun getManifestString(context: Context, key: String): String? {
         return getManifestBundle(context).getString(key)
     }
