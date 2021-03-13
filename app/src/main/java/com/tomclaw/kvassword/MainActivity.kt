@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -223,16 +222,11 @@ class MainActivity : AppCompatActivity() {
         try {
             val uri = Uri.parse("android.resource://$packageName/$sound")
             MediaPlayer().apply {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    @Suppress("DEPRECATION")
-                    setAudioStreamType(AudioManager.STREAM_SYSTEM)
-                } else {
-                    setAudioAttributes(
-                            AudioAttributes.Builder()
-                                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                                    .build())
-                }
+                setAudioAttributes(
+                        AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                .build())
                 setDataSource(applicationContext, uri)
                 setOnCompletionListener { it.release() }
                 prepare()
