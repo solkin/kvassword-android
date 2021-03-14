@@ -38,7 +38,7 @@
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:textColor="@color/colorChar"
-                android:textIsSelectable="true"
+                android:textIsSelectable="false"
                 android:textSize="18sp"
                 android:typeface="monospace"
                 tools:text="Zibuhoker" />
@@ -54,6 +54,8 @@
             android:layout_margin="12dp"
             android:soundEffectsEnabled="false"
             android:text="@string/next"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/colorAccent"
             app:cornerRadius="@dimen/default_radius" />
 
     </LinearLayout>
