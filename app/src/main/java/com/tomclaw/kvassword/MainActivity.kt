@@ -21,6 +21,8 @@ import android.widget.ViewFlipper
 import androidx.annotation.ColorRes
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import com.microsoft.appcenter.AppCenter
@@ -48,8 +50,8 @@ class MainActivity : AppCompatActivity() {
     private var nickname: TextView? = null
     private var strength: RadioGroup? = null
     private var flipper: ViewFlipper? = null
-    private var navigation: com.google.android.material.bottomnavigation.BottomNavigationView? = null
-    private var coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout? = null
+    private var navigation: BottomNavigationView? = null
+    private var coordinator: CoordinatorLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,12 +82,12 @@ class MainActivity : AppCompatActivity() {
         flipper?.initFadeAnimations()
 
         listOf<View>(
-                findViewById(R.id.pass_normal),
-                findViewById(R.id.pass_normal_description),
-                findViewById(R.id.pass_good),
-                findViewById(R.id.pass_good_description),
-                findViewById(R.id.pass_strong),
-                findViewById(R.id.pass_strong_description)
+            findViewById(R.id.pass_normal),
+            findViewById(R.id.pass_normal_description),
+            findViewById(R.id.pass_good),
+            findViewById(R.id.pass_good_description),
+            findViewById(R.id.pass_strong),
+            findViewById(R.id.pass_strong_description)
         ).forEach { view -> view.setOnClickListener { onNextPasswordClick(it) } }
 
         nextPassword?.setOnClickListener { onNextPasswordClick(it) }
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         password?.copyClickListener()
         nickname?.copyClickListener()
 
-        navigation?.setOnNavigationItemSelectedListener { item ->
+        navigation?.setOnItemSelectedListener { item ->
             val position = when (item.itemId) {
                 R.id.password -> 0
                 R.id.nickname -> 1
@@ -139,7 +141,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun getManifestBundle(context: Context): Bundle {
         return try {
-            context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA).metaData
+            context.packageManager.getApplicationInfo(
+                context.packageName,
+                PackageManager.GET_META_DATA
+            ).metaData
         } catch (e: PackageManager.NameNotFoundException) {
             throw RuntimeException(e)
         }
@@ -192,9 +197,19 @@ class MainActivity : AppCompatActivity() {
     private fun onRateAppClick() {
         val appPackageName = packageName
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=$appPackageName")
+                )
+            )
         } catch (ex: android.content.ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
+                )
+            )
         }
         trackEvent("Open rate app")
         bananalytics.trackEvent("Open rate app")
@@ -202,9 +217,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun onAllProjectsClick() {
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:TomClaw+Software")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://search?q=pub:TomClaw+Software")
+                )
+            )
         } catch (ex: android.content.ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")
+                )
+            )
         }
         trackEvent("Open all projects")
         bananalytics.trackEvent("Open all projects")
@@ -223,10 +248,11 @@ class MainActivity : AppCompatActivity() {
             val uri = Uri.parse("android.resource://$packageName/$sound")
             MediaPlayer().apply {
                 setAudioAttributes(
-                        AudioAttributes.Builder()
-                                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                                .build())
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build()
+                )
                 setDataSource(applicationContext, uri)
                 setOnCompletionListener { it.release() }
                 prepare()
@@ -239,29 +265,29 @@ class MainActivity : AppCompatActivity() {
     private fun generatePassword() {
         val passItems = when (strength?.checkedRadioButtonId) {
             R.id.pass_normal -> listOf(
-                    randomWord.nextWord(6).toFirstUpper().toSpan(R.color.color1),
-                    Span(
-                            R.color.color2,
-                            random.digit(),
-                            random.digit()
-                    )
+                randomWord.nextWord(6).toFirstUpper().toSpan(R.color.color1),
+                Span(
+                    R.color.color2,
+                    random.digit(),
+                    random.digit()
+                )
             )
             R.id.pass_good -> listOf(
-                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
-                    random.digit().toSpan(R.color.color2),
-                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
-                    random.symbol().toSpan(R.color.color4)
+                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
+                random.digit().toSpan(R.color.color2),
+                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
+                random.symbol().toSpan(R.color.color4)
             )
             R.id.pass_strong -> listOf(
-                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
-                    random.digit().toSpan(R.color.color2),
-                    randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
-                    Span(
-                            R.color.color4,
-                            random.symbol(),
-                            random.digit()
-                    ),
-                    randomWord.nextWord(3).toUpperCase(Locale.getDefault()).toSpan(R.color.color5)
+                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
+                random.digit().toSpan(R.color.color2),
+                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
+                Span(
+                    R.color.color4,
+                    random.symbol(),
+                    random.digit()
+                ),
+                randomWord.nextWord(3).toUpperCase(Locale.getDefault()).toSpan(R.color.color5)
             )
             else -> throw IllegalStateException("Invalid selection")
         }
@@ -274,10 +300,10 @@ class MainActivity : AppCompatActivity() {
     private fun generateNickname() {
         val nickLength = 4 + random.nextInt(5)
         nickname?.text = randomWord.nextWord(nickLength)
-                .toFirstUpper()
-                .toSpan(R.color.color1)
-                .toList()
-                .concatItems(resources)
+            .toFirstUpper()
+            .toSpan(R.color.color1)
+            .toList()
+            .concatItems(resources)
         trackEvent("Generate Nickname")
         bananalytics.trackEvent("Generate Nickname")
     }

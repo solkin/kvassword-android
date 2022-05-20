@@ -48,9 +48,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/rate_app"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
@@ -59,12 +59,13 @@
                     android:layout_weight="1"
                     android:text="@string/rate_app"
                     android:textColor="@android:color/white"
+                    android:textSize="16sp"
                     app:backgroundTint="@color/colorAccent"
                     app:cornerRadius="@dimen/default_radius" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/all_projects"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
@@ -73,6 +74,7 @@
                     android:layout_weight="1"
                     android:text="@string/other_projects"
                     android:textColor="@android:color/white"
+                    android:textSize="16sp"
                     app:backgroundTint="@color/colorAccent"
                     app:cornerRadius="@dimen/default_radius" />
 
@@ -86,8 +88,7 @@
                 android:gravity="center"
                 android:text="@string/vendor"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                tools:targetApi="jelly_bean" />
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/app_version"
@@ -96,7 +97,6 @@
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:textSize="12sp"
-                tools:targetApi="jelly_bean"
                 tools:text="Версия 3 (сборка 173)" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -109,8 +109,7 @@
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
                 android:text="@string/info_extended"
-                android:textSize="12sp"
-                tools:targetApi="jelly_bean" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 

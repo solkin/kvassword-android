@@ -35,8 +35,7 @@
                 android:background="@drawable/pass_back"
                 android:fontFamily="monospace"
                 android:gravity="center_horizontal"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
+                android:padding="8dp"
                 android:textColor="@color/colorChar"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
@@ -47,7 +46,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/next_nickname"
-            style="@style/Widget.MaterialComponents.Button"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -55,6 +54,7 @@
             android:soundEffectsEnabled="false"
             android:text="@string/next"
             android:textColor="@android:color/white"
+            android:textSize="16sp"
             app:backgroundTint="@color/colorAccent"
             app:cornerRadius="@dimen/default_radius" />
 
