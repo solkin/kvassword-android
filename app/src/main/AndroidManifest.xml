@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tomclaw.kvassword">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -18,7 +17,7 @@
             </intent-filter>
         </activity>
         <meta-data
-            android:name="net.hockeyapp.android.appIdentifier"
+            android:name="appcenter.app_identifier"
             android:value="${APPCENTER_APP_ID}" />
     </application>
 

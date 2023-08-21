@@ -373,4 +373,4 @@ private const val KEY_PASSWORD = "password"
 private const val KEY_NICKNAME = "nickname"
 private const val KEY_NAVIGATION = "navigation"
 
-private const val APP_IDENTIFIER_KEY = "net.hockeyapp.android.appIdentifier"
+private const val APP_IDENTIFIER_KEY = "appcenter.app_identifier"

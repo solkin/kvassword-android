@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
-apply plugin: 'kotlin-android-extensions'
-
 android {
     signingConfigs {
         release {
@@ -13,13 +11,13 @@ android {
             if (project.hasProperty("keyPassword")) keyPassword project.keyPassword
         }
     }
-    compileSdkVersion 32
+    compileSdk 33
     defaultConfig {
         applicationId "com.tomclaw.kvassword"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 1000
-        versionName "1.7"
+        targetSdkVersion 33
+        versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 82
+        versionName "1.8"
         manifestPlaceholders = [
                 APPCENTER_APP_ID: "3072f86b-5b3a-4480-8881-0e1f00948f82"
         ]
@@ -33,15 +31,16 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility 17
+        sourceCompatibility 17
     }
+    namespace 'com.tomclaw.kvassword'
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'com.google.code.gson:gson:2.8.9'
-    implementation "com.microsoft.appcenter:appcenter-analytics:4.1.0"
-    implementation "com.microsoft.appcenter:appcenter-crashes:4.1.0"
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation "com.microsoft.appcenter:appcenter-analytics:4.4.5"
+    implementation "com.microsoft.appcenter:appcenter-crashes:4.4.5"
 }

@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import java.util.Locale
 import java.util.Random
 
 fun Random.digit(): String = (1 + nextInt(9)).toString()
@@ -24,7 +25,7 @@ fun Array<out String>.concat(): String {
 }
 
 fun String.toFirstUpper(): String {
-    return substring(0, 1).toUpperCase() + substring(1).toLowerCase()
+    return substring(0, 1).uppercase(Locale.getDefault()) + substring(1).lowercase(Locale.getDefault())
 }
 
 fun List<Span>.concatItems(resources: Resources): Spannable {
