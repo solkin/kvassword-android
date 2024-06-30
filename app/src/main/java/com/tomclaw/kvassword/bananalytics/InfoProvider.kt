@@ -27,11 +27,11 @@ class InfoProvider(private val context: Context) {
         }
         val deviceName = Build.MANUFACTURER + " " + Build.MODEL
         return EnvironmentInfo(
-                packageName,
-                versionCode,
-                Build.VERSION.SDK_INT,
-                getUniqueId(),
-                deviceName
+            packageName,
+            versionCode,
+            Build.VERSION.SDK_INT,
+            getUniqueId(),
+            deviceName
         )
     }
 

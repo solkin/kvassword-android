@@ -20,9 +20,9 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class Bananalytics(
-        private val filesDir: File,
-        private val infoProvider: InfoProvider,
-        private val gson: Gson
+    private val filesDir: File,
+    private val infoProvider: InfoProvider,
+    private val gson: Gson
 ) {
 
     private val executor: Executor = Executors.newSingleThreadExecutor()
@@ -144,9 +144,9 @@ class Bananalytics(
     }
 
     private fun createEvent(
-            event: String,
-            payload: String?,
-            time: Long = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+        event: String,
+        payload: String?,
+        time: Long = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
     ) = AnalyticsEvent(event, payload, time)
 
 
