@@ -122,9 +122,9 @@ class MainActivity : AppCompatActivity() {
         bananalytics.trackEvent("start")
     }
 
-    fun register(application: Application) {
+    private fun register(application: Application) {
         val appIdentifier = getAppIdentifier(application.applicationContext)
-        require(!(appIdentifier == null || appIdentifier.isEmpty())) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
+        require(!appIdentifier.isNullOrEmpty()) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
         AppCenter.start(getApplication(), appIdentifier, Analytics::class.java, Crashes::class.java)
     }
 
@@ -287,7 +287,7 @@ class MainActivity : AppCompatActivity() {
                     random.symbol(),
                     random.digit()
                 ),
-                randomWord.nextWord(3).toUpperCase(Locale.getDefault()).toSpan(R.color.color5)
+                randomWord.nextWord(3).uppercase(Locale.getDefault()).toSpan(R.color.color5)
             )
             else -> throw IllegalStateException("Invalid selection")
         }

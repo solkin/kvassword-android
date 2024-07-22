@@ -1,6 +1,5 @@
 package com.tomclaw.kvassword
 
-import java.util.Arrays
 import java.util.Random
 
 class RandomWord(private val grammar: Grammar) {
@@ -21,12 +20,12 @@ class RandomWord(private val grammar: Grammar) {
         while (randomWord.length != wordLength) {
             previousWord = randomWord
             randomWord = addCharacter(
-                    grammar.startBiGram,
-                    wordLength,
-                    randomWord,
-                    grammar.lookupBiGram,
-                    grammar.nextCharLookup,
-                    flag
+                grammar.startBiGram,
+                wordLength,
+                randomWord,
+                grammar.lookupBiGram,
+                grammar.nextCharLookup,
+                flag
             )
             if (previousWord == randomWord) {
                 count++
@@ -45,12 +44,12 @@ class RandomWord(private val grammar: Grammar) {
     }
 
     private fun addCharacter(
-            startBiGram: Array<String>,
-            desiredLength: Int,
-            currentWord: String,
-            lookupBiGram: Array<String>,
-            nextCharLookup: Array<Array<Array<String>>>,
-            startFlag: Int
+        startBiGram: Array<String>,
+        desiredLength: Int,
+        currentWord: String,
+        lookupBiGram: Array<String>,
+        nextCharLookup: Array<Array<Array<String>>>,
+        startFlag: Int
     ): String {
         var word = currentWord
         var flag = startFlag
@@ -85,9 +84,9 @@ class RandomWord(private val grammar: Grammar) {
     }
 
     private fun getNextCharacter(
-            type: Int,
-            mainIndex: Int,
-            theCharacterVault: Array<Array<Array<String>>>
+        type: Int,
+        mainIndex: Int,
+        theCharacterVault: Array<Array<Array<String>>>
     ): String {
         val nextChar: String
         val i = indexGenerator(theCharacterVault[mainIndex][type].size)

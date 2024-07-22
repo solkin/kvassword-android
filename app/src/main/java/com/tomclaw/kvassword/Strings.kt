@@ -25,7 +25,8 @@ fun Array<out String>.concat(): String {
 }
 
 fun String.toFirstUpper(): String {
-    return substring(0, 1).uppercase(Locale.getDefault()) + substring(1).lowercase(Locale.getDefault())
+    return substring(0, 1).uppercase(Locale.getDefault()) +
+            substring(1).lowercase(Locale.getDefault())
 }
 
 fun List<Span>.concatItems(resources: Resources): Spannable {
@@ -37,10 +38,10 @@ fun List<Span>.concatItems(resources: Resources): Spannable {
         val start = position
         val end = position + span.text.concat().length
         spannable.setSpan(
-                ForegroundColorSpan(resources.getColor(span.color)),
-                start,
-                end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            ForegroundColorSpan(resources.getColor(span.color)),
+            start,
+            end,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         position = end
     }
