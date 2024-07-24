@@ -16,8 +16,8 @@ android {
         applicationId "com.tomclaw.kvassword"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 85
-        versionName "2.0"
+        versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 86
+        versionName "2.1"
         manifestPlaceholders = [
                 APPCENTER_APP_ID: "3072f86b-5b3a-4480-8881-0e1f00948f82"
         ]
