@@ -1,8 +1,12 @@
 package com.tomclaw.kvassword
 
-import java.util.Random
+import com.tomclaw.kvassword.generator.EntropySource
+import com.tomclaw.kvassword.generator.RandomEntropySource
 
-class RandomWord(private val grammar: Grammar) {
+class RandomWord(
+    private val grammar: Grammar,
+    private val source: EntropySource = RandomEntropySource()
+) {
 
     fun nextWord(wordLength: Int): String {
         if (wordLength < 3 || wordLength > 15) {
@@ -76,12 +80,7 @@ class RandomWord(private val grammar: Grammar) {
         return word + getNextCharacter(type, mainIndex, nextCharLookup)
     }
 
-    private fun indexGenerator(arrayLength: Int): Int {
-        val theIndex: Int
-        val generator = Random()
-        theIndex = generator.nextInt(arrayLength)
-        return theIndex
-    }
+    private fun indexGenerator(arrayLength: Int): Int = source.nextInt(arrayLength)
 
     private fun getNextCharacter(
         type: Int,
