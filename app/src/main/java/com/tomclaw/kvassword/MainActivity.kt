@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         bananalytics = (application as App).bananalytics
 
         setContentView(R.layout.activity_main)
+        findViewById<View>(android.R.id.content).applySystemBarsPadding(top = true, bottom = false)
         initEngine()
         bindViews()
         setupNavigation()

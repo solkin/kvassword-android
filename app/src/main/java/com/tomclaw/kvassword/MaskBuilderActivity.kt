@@ -61,6 +61,7 @@ class MaskBuilderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         settings = Settings(this)
         setContentView(R.layout.activity_mask_builder)
+        findViewById<View>(android.R.id.content).applySystemBarsPadding()
 
         val grammar = GrammarRepository(assets, gson).load(settings.language)
         val source = RandomEntropySource()

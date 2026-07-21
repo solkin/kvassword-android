@@ -31,6 +31,7 @@ class MemorizeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         target = intent.getStringExtra(EXTRA_PASSWORD).orEmpty()
         setContentView(R.layout.activity_memorize)
+        findViewById<View>(android.R.id.content).applySystemBarsPadding()
 
         targetView = findViewById(R.id.memorize_target)
         input = findViewById(R.id.memorize_input)
