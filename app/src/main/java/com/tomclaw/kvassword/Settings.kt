@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.tomclaw.kvassword.generator.GrammarRepository
 import com.tomclaw.kvassword.generator.StrengthPreset
-import java.util.Locale
 
 /**
  * Persisted user preferences, backed by SharedPreferences.
@@ -54,11 +53,7 @@ class Settings(context: Context) {
         get() = prefs.getString(KEY_WORD_CASE, "cap") ?: "cap"
         set(value) = prefs.edit().putString(KEY_WORD_CASE, value).apply()
 
-    private fun defaultLanguage(): String {
-        val lang = Locale.getDefault().language
-        return if (GrammarRepository.LANGUAGES.contains(lang)) lang
-        else GrammarRepository.DEFAULT_LANGUAGE
-    }
+    private fun defaultLanguage(): String = GrammarRepository.DEFAULT_LANGUAGE
 
     companion object {
         private const val NAME = "clever_password"
