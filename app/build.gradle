@@ -26,7 +26,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.release
+            signingConfig project.hasProperty("storeFile") ? signingConfigs.release : null
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -34,11 +34,15 @@ android {
         targetCompatibility 17
         sourceCompatibility 17
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
     namespace 'com.tomclaw.kvassword'
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation "com.microsoft.appcenter:appcenter-analytics:4.4.5"
