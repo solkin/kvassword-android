@@ -11,11 +11,11 @@ android {
             if (project.hasProperty("keyPassword")) keyPassword project.keyPassword
         }
     }
-    compileSdk 34
+    compileSdk 37
     defaultConfig {
         applicationId "com.tomclaw.kvassword"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 37
         versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 95
         versionName "3.0"
         manifestPlaceholders = [
@@ -27,7 +27,7 @@ android {
             minifyEnabled true
             shrinkResources true
             signingConfig project.hasProperty("storeFile") ? signingConfigs.release : null
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
