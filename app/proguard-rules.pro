@@ -30,6 +30,9 @@
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
+# Bananalytics DTOs (serialized/deserialized via Gson)
+-keep class com.tomclaw.bananalytics.api.** { *; }
+
 # Grammar
 -keep class com.tomclaw.kvassword.Unobfuscatable
 -keep class * implements com.tomclaw.kvassword.Unobfuscatable

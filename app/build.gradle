@@ -18,9 +18,6 @@ android {
         targetSdkVersion 37
         versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 97
         versionName "3.0"
-        manifestPlaceholders = [
-                APPCENTER_APP_ID: "3072f86b-5b3a-4480-8881-0e1f00948f82"
-        ]
     }
     buildTypes {
         release {
@@ -45,6 +42,5 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation "com.microsoft.appcenter:appcenter-analytics:4.4.5"
-    implementation "com.microsoft.appcenter:appcenter-crashes:4.4.5"
+    implementation 'com.github.solkin:bananalytics-android:v1.0.0'
 }

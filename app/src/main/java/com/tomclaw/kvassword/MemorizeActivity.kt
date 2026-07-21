@@ -18,6 +18,8 @@ class MemorizeActivity : AppCompatActivity() {
 
     private lateinit var target: String
     private var revealed = false
+    private var succeeded = false
+    private val bananalytics by lazy { (application as App).bananalytics }
 
     private lateinit var targetView: TextView
     private lateinit var input: TextInputEditText
@@ -65,6 +67,10 @@ class MemorizeActivity : AppCompatActivity() {
             progress.text = getString(R.string.memorize_success)
             progress.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.md_success))
             progressIcon.visibility = View.VISIBLE
+            if (!succeeded) {
+                succeeded = true
+                bananalytics.trackEvent("Memorize Success")
+            }
         } else {
             progress.text = getString(R.string.memorize_progress, matched, target.length)
             progress.setTextColor(getColorFromAttr(com.google.android.material.R.attr.colorOnSurfaceVariant))

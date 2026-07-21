@@ -55,6 +55,7 @@ class MaskBuilderActivity : AppCompatActivity() {
     private lateinit var container: android.view.ViewGroup
     private lateinit var emptyView: View
     private lateinit var previewText: TextView
+    private val bananalytics by lazy { (application as App).bananalytics }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -222,6 +223,7 @@ class MaskBuilderActivity : AppCompatActivity() {
         val mask = currentMask()
         settings.customMask = if (mask.tokens.isEmpty()) "" else mask.toMaskString()
         if (mask.tokens.isNotEmpty()) settings.sitePreset = CUSTOM_PRESET_ID
+        bananalytics.trackEvent("Save Mask", "blocks", mask.tokens.size.toString())
         setResult(RESULT_OK)
         finish()
     }

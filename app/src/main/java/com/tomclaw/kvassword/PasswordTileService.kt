@@ -37,6 +37,8 @@ class PasswordTileService : TileService() {
 
         copyToClipboard(password)
         Toast.makeText(this, R.string.tile_copied, Toast.LENGTH_SHORT).show()
+
+        (application as? App)?.bananalytics?.trackEvent("Generate From Tile", "preset", settings.lastPreset)
     }
 
     private fun copyToClipboard(text: String) {

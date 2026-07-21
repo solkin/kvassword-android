@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.tomclaw.kvassword.generator.GrammarRepository
 import com.tomclaw.kvassword.generator.StrengthPreset
+import java.util.UUID
 
 /**
  * Persisted user preferences, backed by SharedPreferences.
@@ -53,6 +54,17 @@ class Settings(context: Context) {
         get() = prefs.getString(KEY_WORD_CASE, "cap") ?: "cap"
         set(value) = prefs.edit().putString(KEY_WORD_CASE, value).apply()
 
+    /** Stable per-install identifier for analytics. */
+    val deviceId: String
+        get() {
+            var id = prefs.getString(KEY_DEVICE_ID, null)
+            if (id == null) {
+                id = UUID.randomUUID().toString()
+                prefs.edit().putString(KEY_DEVICE_ID, id).apply()
+            }
+            return id
+        }
+
     private fun defaultLanguage(): String = GrammarRepository.DEFAULT_LANGUAGE
 
     companion object {
@@ -67,6 +79,7 @@ class Settings(context: Context) {
         private const val KEY_SITE_PRESET = "site_preset"
         private const val KEY_WORD_LENGTH = "word_length"
         private const val KEY_WORD_CASE = "word_case"
+        private const val KEY_DEVICE_ID = "device_id"
 
         const val CLIPBOARD_CLEAR_DELAY_MS = 30_000L
     }

@@ -1,6 +1,5 @@
 package com.tomclaw.kvassword
 
-import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -14,7 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import android.widget.ViewFlipper
@@ -32,11 +30,7 @@ import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
-import com.tomclaw.kvassword.bananalytics.Bananalytics
-import com.tomclaw.kvassword.bananalytics.InfoProvider
+import com.tomclaw.bananalytics.Bananalytics
 import com.tomclaw.kvassword.generator.CUSTOM_PRESET_ID
 import com.tomclaw.kvassword.generator.EntropyEstimator
 import com.tomclaw.kvassword.generator.GrammarRepository
@@ -95,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         suppress = true
 
         settings = Settings(this)
-        bananalytics = Bananalytics(filesDir, InfoProvider(this), gson)
+        bananalytics = (application as App).bananalytics
 
         setContentView(R.layout.activity_main)
         initEngine()
@@ -118,7 +112,6 @@ class MainActivity : AppCompatActivity() {
 
         suppress = false
 
-        register(application)
         bananalytics.trackEvent("start")
     }
 
@@ -335,7 +328,7 @@ class MainActivity : AppCompatActivity() {
     private fun generateWord() {
         val result = generator.generate(wordMask(), settings.excludeSimilar)
         word.text = result.toSpannable(this)
-        bananalytics.trackEvent("Generate Nickname")
+        bananalytics.trackEvent("Generate Word", "case", settings.wordCase)
     }
 
     // ---- Settings tab ----
@@ -355,6 +348,7 @@ class MainActivity : AppCompatActivity() {
                 initEngine()
                 generatePassword()
                 generateWord()
+                bananalytics.trackEvent("Change Language", "language", lang)
             }
         }
 
@@ -365,6 +359,7 @@ class MainActivity : AppCompatActivity() {
             settings.excludeSimilar = checked
             generatePassword()
             generateWord()
+            bananalytics.trackEvent("Exclude Similar", "enabled", checked.toString())
         }
 
         updateMaskSummary()
@@ -374,11 +369,17 @@ class MainActivity : AppCompatActivity() {
 
         val autoClearSwitch = findViewById<MaterialSwitch>(R.id.switch_autoclear)
         autoClearSwitch.isChecked = settings.autoClearClipboard
-        autoClearSwitch.setOnCheckedChangeListener { _, checked -> settings.autoClearClipboard = checked }
+        autoClearSwitch.setOnCheckedChangeListener { _, checked ->
+            settings.autoClearClipboard = checked
+            bananalytics.trackEvent("Auto Clear Clipboard", "enabled", checked.toString())
+        }
 
         val soundSwitch = findViewById<MaterialSwitch>(R.id.switch_sound)
         soundSwitch.isChecked = settings.soundEnabled
-        soundSwitch.setOnCheckedChangeListener { _, checked -> settings.soundEnabled = checked }
+        soundSwitch.setOnCheckedChangeListener { _, checked ->
+            settings.soundEnabled = checked
+            bananalytics.trackEvent("Sound", "enabled", checked.toString())
+        }
 
         findViewById<TextView>(R.id.app_version).text = provideVersion()
         findViewById<View>(R.id.rate_app).setOnClickListener { onRateAppClick() }
@@ -403,10 +404,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun copyPassword() {
         copy(password.text.toString())
+        bananalytics.trackEvent("Copy Password", "preset", activePresetId())
     }
 
     private fun copyWord() {
         copy(word.text.toString())
+        bananalytics.trackEvent("Copy Word")
     }
 
     private fun copy(text: String) {
@@ -427,6 +430,7 @@ class MainActivity : AppCompatActivity() {
     private fun openMemorize() {
         val plain = password.text.toString()
         if (plain.isEmpty()) return
+        bananalytics.trackEvent("Open Memorize")
         startActivity(Intent(this, MemorizeActivity::class.java).putExtra(MemorizeActivity.EXTRA_PASSWORD, plain))
     }
 
@@ -468,7 +472,6 @@ class MainActivity : AppCompatActivity() {
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"))
             )
         }
-        Analytics.trackEvent("Open rate app")
         bananalytics.trackEvent("Open rate app")
     }
 
@@ -480,40 +483,11 @@ class MainActivity : AppCompatActivity() {
                 Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software"))
             )
         }
-        Analytics.trackEvent("Open all projects")
         bananalytics.trackEvent("Open all projects")
     }
 
     private fun trackPasswordStrength(presetId: String) {
-        val properties = hashMapOf("strength" to presetId)
-        Analytics.trackEvent("Generate Password", properties)
-        bananalytics.trackEvent("Generate Password", gson.toJson(properties))
-    }
-
-    // ---- AppCenter ----
-
-    private fun register(application: Application) {
-        val appIdentifier = getAppIdentifier(application.applicationContext)
-        require(!appIdentifier.isNullOrEmpty()) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
-        AppCenter.start(getApplication(), appIdentifier, Analytics::class.java, Crashes::class.java)
-    }
-
-    private fun getAppIdentifier(context: Context): String? {
-        val appIdentifier = getManifestString(context, APP_IDENTIFIER_KEY)
-        require(!TextUtils.isEmpty(appIdentifier)) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
-        return appIdentifier
-    }
-
-    private fun getManifestString(context: Context, key: String): String? {
-        return getManifestBundle(context).getString(key)
-    }
-
-    private fun getManifestBundle(context: Context): Bundle {
-        return try {
-            context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA).metaData
-        } catch (e: PackageManager.NameNotFoundException) {
-            throw RuntimeException(e)
-        }
+        bananalytics.trackEvent("Generate Password", "strength", presetId)
     }
 
     private fun provideVersion(): String {
@@ -581,6 +555,5 @@ class MainActivity : AppCompatActivity() {
         const val KEY_WORD = "word"
         const val KEY_BITS = "bits"
         const val KEY_NAVIGATION = "navigation"
-        const val APP_IDENTIFIER_KEY = "appcenter.app_identifier"
     }
 }
