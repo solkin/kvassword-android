@@ -24,9 +24,9 @@
 
                 <include layout="@layout/password_view" />
 
-                <include layout="@layout/nickname_view" />
+                <include layout="@layout/word_view" />
 
-                <include layout="@layout/information_view" />
+                <include layout="@layout/settings_view" />
 
             </ViewFlipper>
 
@@ -40,8 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:itemIconTint="@drawable/nav_item_color_state"
-        app:itemTextColor="@drawable/nav_item_color_state"
+        android:background="?attr/colorSurfaceContainer"
         app:menu="@menu/bottom_navigation_main" />
 
 </LinearLayout>

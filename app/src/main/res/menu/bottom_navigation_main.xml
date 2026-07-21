@@ -3,16 +3,16 @@
     <item
         android:id="@+id/password"
         android:enabled="true"
-        android:icon="@drawable/pass"
+        android:icon="@drawable/ic_nav_password"
         android:title="@string/password" />
     <item
-        android:id="@+id/nickname"
+        android:id="@+id/word"
         android:enabled="true"
-        android:icon="@drawable/nickname"
-        android:title="@string/nickname" />
+        android:icon="@drawable/ic_nav_word"
+        android:title="@string/word" />
     <item
-        android:id="@+id/information"
+        android:id="@+id/settings"
         android:enabled="true"
-        android:icon="@drawable/information"
-        android:title="@string/information" />
+        android:icon="@drawable/ic_nav_settings"
+        android:title="@string/settings" />
 </menu>

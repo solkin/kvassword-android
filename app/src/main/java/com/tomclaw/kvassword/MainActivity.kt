@@ -1,246 +1,441 @@
 package com.tomclaw.kvassword
 
 import android.app.Application
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.View
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.AlphaAnimation
-import android.view.animation.DecelerateInterpolator
-import android.widget.Button
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.ViewFlipper
-import androidx.annotation.ColorRes
 import androidx.annotation.RawRes
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.analytics.Analytics.trackEvent
 import com.microsoft.appcenter.crashes.Crashes
 import com.tomclaw.kvassword.bananalytics.Bananalytics
 import com.tomclaw.kvassword.bananalytics.InfoProvider
-import java.io.InputStreamReader
-import java.util.Locale
-import java.util.Random
-
+import com.tomclaw.kvassword.generator.CUSTOM_PRESET_ID
+import com.tomclaw.kvassword.generator.EntropyEstimator
+import com.tomclaw.kvassword.generator.GrammarRepository
+import com.tomclaw.kvassword.generator.LetterCase
+import com.tomclaw.kvassword.generator.Mask
+import com.tomclaw.kvassword.generator.MaskParser
+import com.tomclaw.kvassword.generator.PasswordGenerator
+import com.tomclaw.kvassword.generator.RandomEntropySource
+import com.tomclaw.kvassword.generator.SitePreset
+import com.tomclaw.kvassword.generator.Strength
+import com.tomclaw.kvassword.generator.StrengthLevel
+import com.tomclaw.kvassword.generator.StrengthPreset
+import com.tomclaw.kvassword.generator.Token
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var random: Random
-    private lateinit var randomWord: RandomWord
     private val gson = GsonBuilder().create()
-
+    private lateinit var settings: Settings
     private lateinit var bananalytics: Bananalytics
 
-    private var nextPassword: Button? = null
-    private var nextNickname: Button? = null
-    private var password: TextView? = null
-    private var nickname: TextView? = null
-    private var strength: RadioGroup? = null
-    private var flipper: ViewFlipper? = null
-    private var navigation: BottomNavigationView? = null
-    private var coordinator: CoordinatorLayout? = null
+    private lateinit var randomWord: RandomWord
+    private lateinit var entropy: EntropyEstimator
+    private lateinit var generator: PasswordGenerator
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val clipboardCleaner = Runnable { clearClipboard() }
+
+    private var suppress = false
+    private val siteMasks = HashMap<Int, Pair<String, Mask>>()
+
+    private val maskBuilderLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) onMaskChanged()
+    }
+
+    // Views
+    private lateinit var flipper: ViewFlipper
+    private lateinit var navigation: BottomNavigationView
+    private lateinit var coordinator: CoordinatorLayout
+    private lateinit var password: TextView
+    private lateinit var word: TextView
+    private lateinit var strengthGroup: MaterialButtonToggleGroup
+    private lateinit var sitePresets: ChipGroup
+    private lateinit var strengthLevel: TextView
+    private lateinit var strengthSummary: TextView
+    private lateinit var strengthBars: View
+    private lateinit var wordLengthSlider: Slider
+    private lateinit var wordLengthValue: TextView
+    private lateinit var wordCaseGroup: MaterialButtonToggleGroup
+    private lateinit var wordOptions: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        suppress = true
 
+        settings = Settings(this)
         bananalytics = Bananalytics(filesDir, InfoProvider(this), gson)
 
         setContentView(R.layout.activity_main)
+        initEngine()
+        bindViews()
+        setupNavigation()
+        setupPasswordTab()
+        setupWordTab()
+        setupSettingsTab()
 
-        initDictionary()
-
-        val restoredPassword = savedInstanceState?.getCharSequence(KEY_PASSWORD)
-        val restoredNickname = savedInstanceState?.getCharSequence(KEY_NICKNAME)
-        val selectedItemId = savedInstanceState?.getInt(KEY_NAVIGATION) ?: NAVIGATION_INVALID
-
-        nextPassword = findViewById(R.id.next_password)
-        nextNickname = findViewById(R.id.next_nickname)
-        password = findViewById(R.id.password)
-        nickname = findViewById(R.id.nickname)
-        strength = findViewById(R.id.pass_strength)
-        flipper = findViewById(R.id.flipper)
-        navigation = findViewById(R.id.bottom_navigation)
-        coordinator = findViewById(R.id.coordinator)
-
-        findViewById<TextView>(R.id.app_version).text = provideVersion()
-        findViewById<TextView>(R.id.rate_app).setOnClickListener { onRateAppClick() }
-        findViewById<TextView>(R.id.all_projects).setOnClickListener { onAllProjectsClick() }
-
-        flipper?.initFadeAnimations()
-
-        listOf<View>(
-            findViewById(R.id.pass_normal),
-            findViewById(R.id.pass_normal_description),
-            findViewById(R.id.pass_good),
-            findViewById(R.id.pass_good_description),
-            findViewById(R.id.pass_strong),
-            findViewById(R.id.pass_strong_description)
-        ).forEach { view -> view.setOnClickListener { onNextPasswordClick(it) } }
-
-        nextPassword?.setOnClickListener { onNextPasswordClick(it) }
-        nextNickname?.setOnClickListener { onNextNicknameClick() }
-        password?.copyClickListener()
-        nickname?.copyClickListener()
-
-        navigation?.setOnItemSelectedListener { item ->
-            val position = when (item.itemId) {
-                R.id.password -> 0
-                R.id.nickname -> 1
-                R.id.information -> 2
-                else -> throw IllegalStateException()
-            }
-            if (flipper?.displayedChild != position) {
-                flipper?.displayedChild = position
-            }
-            true
-        }
-
-        if (selectedItemId >= 0) navigation?.selectedItemId = selectedItemId
-
-        if (restoredPassword == null) {
-            generatePassword()
-            generateNickname()
+        if (savedInstanceState != null) {
+            password.text = savedInstanceState.getCharSequence(KEY_PASSWORD)
+            word.text = savedInstanceState.getCharSequence(KEY_WORD)
+            updateMeter(savedInstanceState.getDouble(KEY_BITS))
+            val nav = savedInstanceState.getInt(KEY_NAVIGATION, 0)
+            navigation.selectedItemId = navItemId(nav)
         } else {
-            password?.text = restoredPassword
-            nickname?.text = restoredNickname
+            generatePassword()
+            generateWord()
         }
+
+        suppress = false
 
         register(application)
         bananalytics.trackEvent("start")
     }
 
-    private fun register(application: Application) {
-        val appIdentifier = getAppIdentifier(application.applicationContext)
-        require(!appIdentifier.isNullOrEmpty()) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
-        AppCenter.start(getApplication(), appIdentifier, Analytics::class.java, Crashes::class.java)
+    private fun initEngine() {
+        val grammar = GrammarRepository(assets, gson).load(settings.language)
+        val source = RandomEntropySource()
+        randomWord = RandomWord(grammar, source)
+        entropy = EntropyEstimator(grammar)
+        generator = PasswordGenerator(randomWord, source, entropy)
     }
 
-    private fun getAppIdentifier(context: Context): String? {
-        val appIdentifier = getManifestString(context, APP_IDENTIFIER_KEY)
-        require(!TextUtils.isEmpty(appIdentifier)) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
-        return appIdentifier
+    private fun bindViews() {
+        flipper = findViewById(R.id.flipper)
+        navigation = findViewById(R.id.bottom_navigation)
+        coordinator = findViewById(R.id.coordinator)
+        password = findViewById(R.id.password)
+        word = findViewById(R.id.word)
+        strengthGroup = findViewById(R.id.pass_strength)
+        sitePresets = findViewById(R.id.site_presets)
+        strengthLevel = findViewById(R.id.strength_level)
+        strengthSummary = findViewById(R.id.strength_summary)
+        strengthBars = findViewById(R.id.strength_bars)
+        wordLengthSlider = findViewById(R.id.word_length)
+        wordLengthValue = findViewById(R.id.word_length_value)
+        wordCaseGroup = findViewById(R.id.word_case)
+        wordOptions = findViewById(R.id.word_options)
     }
 
-    @Suppress("SameParameterValue")
-    private fun getManifestString(context: Context, key: String): String? {
-        return getManifestBundle(context).getString(key)
-    }
-
-    private fun getManifestBundle(context: Context): Bundle {
-        return try {
-            context.packageManager.getApplicationInfo(
-                context.packageName,
-                PackageManager.GET_META_DATA
-            ).metaData
-        } catch (e: PackageManager.NameNotFoundException) {
-            throw RuntimeException(e)
+    private fun setupNavigation() {
+        navigation.setOnItemSelectedListener { item ->
+            val position = when (item.itemId) {
+                R.id.password -> 0
+                R.id.word -> 1
+                R.id.settings -> 2
+                else -> return@setOnItemSelectedListener false
+            }
+            if (flipper.displayedChild != position) flipper.displayedChild = position
+            true
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putCharSequence(KEY_PASSWORD, password?.text)
-        outState.putCharSequence(KEY_NICKNAME, nickname?.text)
-        outState.putInt(KEY_NAVIGATION, navigation?.selectedItemId ?: NAVIGATION_INVALID)
+    // ---- Password tab ----
+
+    private fun setupPasswordTab() {
+        findViewById<MaterialButton>(R.id.next_password).setOnClickListener {
+            generatePassword()
+            playClickSound()
+        }
+        findViewById<View>(R.id.password_card).setOnClickListener { copyPassword() }
+        findViewById<MaterialButton>(R.id.memorize).setOnClickListener { openMemorize() }
+
+        buildSiteChips()
+        // Exactly one source is active at a time: a strength preset OR a site chip.
+        if (settings.sitePreset.isEmpty()) {
+            strengthGroup.check(strengthButtonId(settings.strengthPreset))
+        }
+
+        strengthGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked || suppress) return@addOnButtonCheckedListener
+            suppress = true
+            sitePresets.clearCheck()
+            suppress = false
+            settings.strengthPreset = strengthPresetId(checkedId)
+            settings.sitePreset = ""
+            generatePassword()
+        }
+
+        sitePresets.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (suppress) return@setOnCheckedStateChangeListener
+            val checked = checkedIds.firstOrNull()
+            suppress = true
+            if (checked != null) {
+                strengthGroup.clearChecked()
+                settings.sitePreset = siteMasks[checked]?.first ?: ""
+            } else {
+                strengthGroup.check(strengthButtonId(settings.strengthPreset))
+                settings.sitePreset = ""
+            }
+            suppress = false
+            generatePassword()
+        }
     }
 
-    private fun initDictionary() {
-        random = Random(System.currentTimeMillis())
-
-        val reader = InputStreamReader(assets.open(DICTIONARY))
-        val grammar: Grammar
-        try {
-            grammar = gson.fromJson(reader, Grammar::class.java)
-        } finally {
-            try {
-                reader.close()
-            } catch (ignored: Throwable) {
+    private fun buildSiteChips() {
+        sitePresets.removeAllViews()
+        siteMasks.clear()
+        val items = mutableListOf(
+            Triple(SitePreset.NO_SYMBOLS.id, R.string.preset_no_symbols, SitePreset.NO_SYMBOLS.mask),
+            Triple(SitePreset.ALPHANUMERIC.id, R.string.preset_alnum, SitePreset.ALPHANUMERIC.mask),
+            Triple(SitePreset.PASSPHRASE.id, R.string.preset_passphrase, SitePreset.PASSPHRASE.mask),
+            Triple(SitePreset.PIN.id, R.string.preset_pin, SitePreset.PIN.mask)
+        )
+        val custom = settings.customMask
+        if (custom.isNotBlank()) {
+            val mask = MaskParser.parse(custom)
+            if (mask.tokens.isNotEmpty()) {
+                items.add(Triple(CUSTOM_PRESET_ID, R.string.preset_custom, mask))
             }
         }
-        randomWord = RandomWord(grammar)
+        for ((id, label, mask) in items) {
+            val chip = layoutInflater.inflate(R.layout.chip_filter, sitePresets, false) as Chip
+            chip.id = View.generateViewId()
+            chip.text = getString(label)
+            siteMasks[chip.id] = id to mask
+            if (settings.sitePreset == id) chip.isChecked = true
+            sitePresets.addView(chip)
+        }
     }
 
-    private fun onNextPasswordClick(view: View) {
-        when (view.id) {
-            R.id.pass_normal, R.id.pass_normal_description -> {
-                strength?.check(R.id.pass_normal)
+    private fun activeMask(): Mask {
+        val checkedChip = sitePresets.checkedChipId
+        if (checkedChip != View.NO_ID) {
+            siteMasks[checkedChip]?.let { return it.second }
+        }
+        return StrengthPreset.byId(settings.strengthPreset).mask
+    }
+
+    private fun activePresetId(): String {
+        val checkedChip = sitePresets.checkedChipId
+        if (checkedChip != View.NO_ID) {
+            siteMasks[checkedChip]?.let { return it.first }
+        }
+        return settings.strengthPreset
+    }
+
+    private fun generatePassword() {
+        val result = generator.generate(activeMask(), settings.excludeSimilar)
+        password.text = result.toSpannable(this)
+        updateMeter(Strength.charsetBits(result.plain))
+        settings.lastPreset = activePresetId()
+        trackPasswordStrength(activePresetId())
+    }
+
+    private fun updateMeter(bits: Double) {
+        lastBits = bits
+        val levelText = getString(
+            when (Strength.level(bits)) {
+                StrengthLevel.WEAK -> R.string.strength_weak
+                StrengthLevel.FAIR -> R.string.strength_fair
+                StrengthLevel.GOOD -> R.string.strength_good
+                StrengthLevel.STRONG -> R.string.strength_strong
             }
-            R.id.pass_good, R.id.pass_good_description -> {
-                strength?.check(R.id.pass_good)
+        )
+        val crackText = getString(
+            when (Strength.crackTime(bits)) {
+                com.tomclaw.kvassword.generator.CrackTime.INSTANT -> R.string.crack_instant
+                com.tomclaw.kvassword.generator.CrackTime.MINUTES -> R.string.crack_minutes
+                com.tomclaw.kvassword.generator.CrackTime.HOURS -> R.string.crack_hours
+                com.tomclaw.kvassword.generator.CrackTime.DAYS -> R.string.crack_days
+                com.tomclaw.kvassword.generator.CrackTime.YEARS -> R.string.crack_years
+                com.tomclaw.kvassword.generator.CrackTime.CENTURIES -> R.string.crack_centuries
+                com.tomclaw.kvassword.generator.CrackTime.AGES -> R.string.crack_ages
             }
-            R.id.pass_strong, R.id.pass_strong_description -> {
-                strength?.check(R.id.pass_strong)
+        )
+        strengthLevel.text = levelText
+        strengthSummary.text = getString(
+            R.string.meter_summary,
+            getString(R.string.bits_format, bits.roundToInt()),
+            crackText
+        )
+
+        val filled = Strength.bars(bits)
+        val on = ContextCompat.getColor(this, R.color.md_success)
+        val off = ContextCompat.getColor(this, R.color.md_outline_variant)
+        val bars = strengthBars as? android.view.ViewGroup ?: return
+        for (i in 0 until bars.childCount) {
+            bars.getChildAt(i).backgroundTintList =
+                ColorStateList.valueOf(if (i < filled) on else off)
+        }
+    }
+
+    // ---- Word tab ----
+
+    private fun setupWordTab() {
+        findViewById<MaterialButton>(R.id.next_word).setOnClickListener {
+            generateWord()
+            playClickSound()
+        }
+        findViewById<View>(R.id.word_card).setOnClickListener { copyWord() }
+        findViewById<MaterialButton>(R.id.word_options_toggle).setOnClickListener {
+            wordOptions.visibility =
+                if (wordOptions.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        }
+
+        val storedLength = settings.wordLength.coerceIn(4, 12)
+        wordLengthSlider.value = storedLength.toFloat()
+        wordLengthValue.text = storedLength.toString()
+        wordLengthSlider.addOnChangeListener { _, value, fromUser ->
+            wordLengthValue.text = value.roundToInt().toString()
+            if (fromUser && !suppress) {
+                settings.wordLength = value.roundToInt()
+                generateWord()
             }
         }
+
+        wordCaseGroup.check(wordCaseButtonId(settings.wordCase))
+        wordCaseGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked || suppress) return@addOnButtonCheckedListener
+            settings.wordCase = wordCaseId(checkedId)
+            generateWord()
+        }
+    }
+
+    private fun wordMask(): Mask {
+        val length = settings.wordLength
+        val case = when (settings.wordCase) {
+            "lower" -> LetterCase.LOWER
+            "upper" -> LetterCase.UPPER
+            else -> LetterCase.CAPITALIZED
+        }
+        return Mask(listOf(Token.Word(length, length, case)))
+    }
+
+    private fun generateWord() {
+        val result = generator.generate(wordMask(), settings.excludeSimilar)
+        word.text = result.toSpannable(this)
+        bananalytics.trackEvent("Generate Nickname")
+    }
+
+    // ---- Settings tab ----
+
+    private fun setupSettingsTab() {
+        val langGroup = findViewById<ChipGroup>(R.id.lang_group)
+        findViewById<Chip>(if (settings.language == "ru") R.id.chip_ru else R.id.chip_en).isChecked = true
+        langGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (suppress) return@setOnCheckedStateChangeListener
+            val lang = when (checkedIds.firstOrNull()) {
+                R.id.chip_ru -> "ru"
+                R.id.chip_en -> "en"
+                else -> return@setOnCheckedStateChangeListener
+            }
+            if (lang != settings.language) {
+                settings.language = lang
+                initEngine()
+                generatePassword()
+                generateWord()
+            }
+        }
+
+        val excludeSwitch = findViewById<MaterialSwitch>(R.id.switch_exclude)
+        excludeSwitch.isChecked = settings.excludeSimilar
+        excludeSwitch.setOnCheckedChangeListener { _, checked ->
+            if (suppress) return@setOnCheckedChangeListener
+            settings.excludeSimilar = checked
+            generatePassword()
+            generateWord()
+        }
+
+        updateMaskSummary()
+        findViewById<View>(R.id.custom_mask_row).setOnClickListener {
+            maskBuilderLauncher.launch(Intent(this, MaskBuilderActivity::class.java))
+        }
+
+        val autoClearSwitch = findViewById<MaterialSwitch>(R.id.switch_autoclear)
+        autoClearSwitch.isChecked = settings.autoClearClipboard
+        autoClearSwitch.setOnCheckedChangeListener { _, checked -> settings.autoClearClipboard = checked }
+
+        val soundSwitch = findViewById<MaterialSwitch>(R.id.switch_sound)
+        soundSwitch.isChecked = settings.soundEnabled
+        soundSwitch.setOnCheckedChangeListener { _, checked -> settings.soundEnabled = checked }
+
+        findViewById<TextView>(R.id.app_version).text = provideVersion()
+        findViewById<View>(R.id.rate_app).setOnClickListener { onRateAppClick() }
+        findViewById<View>(R.id.all_projects).setOnClickListener { onAllProjectsClick() }
+    }
+
+    private fun updateMaskSummary() {
+        findViewById<TextView>(R.id.custom_mask_summary).text =
+            if (settings.customMask.isBlank()) getString(R.string.custom_mask_none) else settings.customMask
+    }
+
+    private fun onMaskChanged() {
+        updateMaskSummary()
+        suppress = true
+        buildSiteChips()
+        if (settings.sitePreset == CUSTOM_PRESET_ID) strengthGroup.clearChecked()
+        suppress = false
         generatePassword()
-        playClickSound()
     }
 
-    private fun onNextNicknameClick() {
-        generateNickname()
-        playClickSound()
+    // ---- Clipboard / sound ----
+
+    private fun copyPassword() {
+        copy(password.text.toString())
     }
 
-    private fun onRateAppClick() {
-        val appPackageName = packageName
-        try {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=$appPackageName")
-                )
-            )
-        } catch (ex: android.content.ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
-                )
-            )
+    private fun copyWord() {
+        copy(word.text.toString())
+    }
+
+    private fun copy(text: String) {
+        text.copyToClipboard(applicationContext)
+        Snackbar.make(coordinator, R.string.copied, Snackbar.LENGTH_SHORT).show()
+        playCopySound()
+        handler.removeCallbacks(clipboardCleaner)
+        if (settings.autoClearClipboard) {
+            handler.postDelayed(clipboardCleaner, Settings.CLIPBOARD_CLEAR_DELAY_MS)
         }
-        trackEvent("Open rate app")
-        bananalytics.trackEvent("Open rate app")
     }
 
-    private fun onAllProjectsClick() {
-        try {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("market://search?q=pub:TomClaw+Software")
-                )
-            )
-        } catch (ex: android.content.ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software")
-                )
-            )
-        }
-        trackEvent("Open all projects")
-        bananalytics.trackEvent("Open all projects")
+    private fun clearClipboard() {
+        val manager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        manager.setPrimaryClip(ClipData.newPlainText("", ""))
+    }
+
+    private fun openMemorize() {
+        val plain = password.text.toString()
+        if (plain.isEmpty()) return
+        startActivity(Intent(this, MemorizeActivity::class.java).putExtra(MemorizeActivity.EXTRA_PASSWORD, plain))
     }
 
     private fun playClickSound() {
-        playSound(R.raw.click)
+        if (settings.soundEnabled) playSound(R.raw.click)
     }
 
     private fun playCopySound() {
-        playSound(R.raw.copy)
+        if (settings.soundEnabled) playSound(R.raw.copy)
     }
 
     private fun playSound(@RawRes sound: Int) {
@@ -262,74 +457,73 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun generatePassword() {
-        val passItems = when (strength?.checkedRadioButtonId) {
-            R.id.pass_normal -> listOf(
-                randomWord.nextWord(6).toFirstUpper().toSpan(R.color.color1),
-                Span(
-                    R.color.color2,
-                    random.digit(),
-                    random.digit()
-                )
+    // ---- Analytics / links ----
+
+    private fun onRateAppClick() {
+        val appPackageName = packageName
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+        } catch (ex: android.content.ActivityNotFoundException) {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"))
             )
-            R.id.pass_good -> listOf(
-                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
-                random.digit().toSpan(R.color.color2),
-                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
-                random.symbol().toSpan(R.color.color4)
-            )
-            R.id.pass_strong -> listOf(
-                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color1),
-                random.digit().toSpan(R.color.color2),
-                randomWord.nextWord(3).toFirstUpper().toSpan(R.color.color3),
-                Span(
-                    R.color.color4,
-                    random.symbol(),
-                    random.digit()
-                ),
-                randomWord.nextWord(3).uppercase(Locale.getDefault()).toSpan(R.color.color5)
-            )
-            else -> throw IllegalStateException("Invalid selection")
         }
-        val pass = passItems.concatItems(resources)
-        password?.text = pass
-
-        trackPasswordStrength()
+        Analytics.trackEvent("Open rate app")
+        bananalytics.trackEvent("Open rate app")
     }
 
-    private fun generateNickname() {
-        val nickLength = 4 + random.nextInt(5)
-        nickname?.text = randomWord.nextWord(nickLength)
-            .toFirstUpper()
-            .toSpan(R.color.color1)
-            .toList()
-            .concatItems(resources)
-        trackEvent("Generate Nickname")
-        bananalytics.trackEvent("Generate Nickname")
+    private fun onAllProjectsClick() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:TomClaw+Software")))
+        } catch (ex: android.content.ActivityNotFoundException) {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=TomClaw+Software"))
+            )
+        }
+        Analytics.trackEvent("Open all projects")
+        bananalytics.trackEvent("Open all projects")
     }
 
-    private fun trackPasswordStrength() {
-        when (strength?.checkedRadioButtonId) {
-            R.id.pass_normal -> "normal"
-            R.id.pass_good -> "good"
-            R.id.pass_strong -> "strong"
-            else -> null
-        }?.let {
-            val properties = hashMapOf("strength" to it)
-            trackEvent("Generate Password", properties)
-            bananalytics.trackEvent("Generate Password", gson.toJson(properties))
+    private fun trackPasswordStrength(presetId: String) {
+        val properties = hashMapOf("strength" to presetId)
+        Analytics.trackEvent("Generate Password", properties)
+        bananalytics.trackEvent("Generate Password", gson.toJson(properties))
+    }
+
+    // ---- AppCenter ----
+
+    private fun register(application: Application) {
+        val appIdentifier = getAppIdentifier(application.applicationContext)
+        require(!appIdentifier.isNullOrEmpty()) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
+        AppCenter.start(getApplication(), appIdentifier, Analytics::class.java, Crashes::class.java)
+    }
+
+    private fun getAppIdentifier(context: Context): String? {
+        val appIdentifier = getManifestString(context, APP_IDENTIFIER_KEY)
+        require(!TextUtils.isEmpty(appIdentifier)) { "AppCenter app identifier was not configured correctly in manifest or build configuration." }
+        return appIdentifier
+    }
+
+    private fun getManifestString(context: Context, key: String): String? {
+        return getManifestBundle(context).getString(key)
+    }
+
+    private fun getManifestBundle(context: Context): Bundle {
+        return try {
+            context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA).metaData
+        } catch (e: PackageManager.NameNotFoundException) {
+            throw RuntimeException(e)
         }
     }
 
     private fun provideVersion(): String {
         try {
             val info = packageManager.getPackageInfo(packageName, 0)
-            val version: Long
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            val version: Long = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                 @Suppress("DEPRECATION")
-                version = info.versionCode.toLong()
+                info.versionCode.toLong()
             } else {
-                version = info.longVersionCode
+                info.longVersionCode
             }
             return resources.getString(R.string.app_version, info.versionName, version)
         } catch (ignored: PackageManager.NameNotFoundException) {
@@ -337,40 +531,56 @@ class MainActivity : AppCompatActivity() {
         return ""
     }
 
-    private fun String.toSpan(@ColorRes color: Int) = Span(color, this)
-
-    private fun Span.toList() = listOf(this)
-
-    private fun TextView.copyClickListener() {
-        setOnClickListener {
-            (it as TextView?)?.text.toString().copyToClipboard(context = applicationContext)
-            coordinator?.let { cl ->
-                Snackbar.make(cl, R.string.copied, Snackbar.LENGTH_SHORT).show()
-                playCopySound()
-            }
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putCharSequence(KEY_PASSWORD, password.text)
+        outState.putCharSequence(KEY_WORD, word.text)
+        outState.putDouble(KEY_BITS, lastBits)
+        outState.putInt(KEY_NAVIGATION, flipper.displayedChild)
     }
 
-    private fun ViewFlipper.initFadeAnimations() {
-        inAnimation = AlphaAnimation(0f, 1f).apply {
-            interpolator = DecelerateInterpolator()
-            startOffset = 100
-            duration = 200
-        }
+    private var lastBits: Double = 0.0
 
-        outAnimation = AlphaAnimation(1f, 0f).apply {
-            interpolator = AccelerateInterpolator()
-            duration = 200
-        }
+    private fun navItemId(position: Int): Int = when (position) {
+        1 -> R.id.word
+        2 -> R.id.settings
+        else -> R.id.password
     }
 
+    private fun strengthButtonId(presetId: String): Int = when (StrengthPreset.byId(presetId)) {
+        StrengthPreset.NORMAL -> R.id.pass_normal
+        StrengthPreset.GOOD -> R.id.pass_good
+        StrengthPreset.STRONG -> R.id.pass_strong
+    }
+
+    private fun strengthPresetId(buttonId: Int): String = when (buttonId) {
+        R.id.pass_normal -> StrengthPreset.NORMAL.id
+        R.id.pass_strong -> StrengthPreset.STRONG.id
+        else -> StrengthPreset.GOOD.id
+    }
+
+    private fun wordCaseButtonId(case: String): Int = when (case) {
+        "lower" -> R.id.case_lower
+        "upper" -> R.id.case_upper
+        else -> R.id.case_capitalized
+    }
+
+    private fun wordCaseId(buttonId: Int): String = when (buttonId) {
+        R.id.case_lower -> "lower"
+        R.id.case_upper -> "upper"
+        else -> "cap"
+    }
+
+    override fun onDestroy() {
+        handler.removeCallbacks(clipboardCleaner)
+        super.onDestroy()
+    }
+
+    private companion object {
+        const val KEY_PASSWORD = "password"
+        const val KEY_WORD = "word"
+        const val KEY_BITS = "bits"
+        const val KEY_NAVIGATION = "navigation"
+        const val APP_IDENTIFIER_KEY = "appcenter.app_identifier"
+    }
 }
-
-private const val DICTIONARY = "grammar.json"
-private const val NAVIGATION_INVALID = -1
-
-private const val KEY_PASSWORD = "password"
-private const val KEY_NICKNAME = "nickname"
-private const val KEY_NAVIGATION = "navigation"
-
-private const val APP_IDENTIFIER_KEY = "appcenter.app_identifier"
