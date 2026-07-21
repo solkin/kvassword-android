@@ -16,7 +16,7 @@ android {
         applicationId "com.tomclaw.kvassword"
         minSdkVersion 21
         targetSdkVersion 37
-        versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 97
+        versionCode project.hasProperty("versionCode") ? Integer.parseInt(project.versionCode) : 99
         versionName "3.0"
     }
     buildTypes {
