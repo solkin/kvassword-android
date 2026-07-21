@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 tonal roles (magenta), dark theme -->
+    <color name="md_primary">#f2abff</color>
+    <color name="md_on_primary">#59006a</color>
+    <color name="md_primary_container">#8a0f9c</color>
+    <color name="md_on_primary_container">#fad7ff</color>
+    <color name="md_secondary">#d8bfd0</color>
+    <color name="md_on_secondary">#3b2a38</color>
+    <color name="md_secondary_container">#4b3a4f</color>
+    <color name="md_on_secondary_container">#efdcf2</color>
+    <color name="md_tertiary">#f5b7b3</color>
+    <color name="md_on_tertiary">#4c2523</color>
+    <color name="md_tertiary_container">#663b39</color>
+    <color name="md_on_tertiary_container">#ffdad7</color>
+
+    <color name="md_background">#141216</color>
+    <color name="md_on_background">#e7e1e8</color>
+    <color name="md_surface">#141216</color>
+    <color name="md_on_surface">#e7e1e8</color>
+    <color name="md_surface_variant">#4a454e</color>
+    <color name="md_on_surface_variant">#cbc4cf</color>
+    <color name="md_surface_container_lowest">#0f0d11</color>
+    <color name="md_surface_container_low">#1c1a1f</color>
+    <color name="md_surface_container">#211f24</color>
+    <color name="md_surface_container_high">#2b282e</color>
+    <color name="md_surface_container_highest">#363239</color>
+    <color name="md_outline">#958e99</color>
+    <color name="md_outline_variant">#4a454e</color>
+
+    <color name="md_success">#4fd39b</color>
+    <color name="md_error">#ffb4ab</color>
+    <color name="md_on_error">#690005</color>
+    <color name="md_scrim">#000000</color>
+
+    <!-- Legacy names -->
+    <color name="colorChar">#e7e1e8</color>
+    <color name="colorBack">#141216</color>
+    <color name="colorPassBack">#211f24</color>
+    <color name="colorPassBorder">#4a454e</color>
+</resources>
