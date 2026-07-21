@@ -1,21 +1,117 @@
 <resources>
-    <string name="app_name">KvassWord</string>
-    <string name="next">Next</string>
-    <string name="pass_normal">Normal</string>
-    <string name="pass_good">Good</string>
-    <string name="pass_strong">Strong</string>
-    <string name="description_pass_normal">Simple to remember password. Can be used for not very responsible purposes.</string>
-    <string name="description_pass_good">Still quite simple to remember password, but more strong. Can be used for the most of personal purposes.</string>
-    <string name="description_pass_strong">Sure, you can remember this password. Very strong password. Can be used for personal and working purposes.</string>
-    <string name="copied">Copied!</string>
+    <string name="app_name">Clever Password</string>
+
+    <!-- Navigation -->
     <string name="password">Password</string>
-    <string name="nickname">Nickname</string>
-    <string name="description_nickname">Sometimes it\'s difficult to come up with a sonorous and unusual nickname. KvassWord has a great imagination!</string>
-    <string name="information">Information</string>
+    <string name="word">Word</string>
+    <string name="settings">Settings</string>
+
+    <!-- Actions -->
+    <string name="generate">Generate</string>
+    <string name="copied">Copied</string>
+    <string name="copy_hint">Tap to copy</string>
+    <string name="memorize">Memorize</string>
+
+    <!-- Colour legend -->
+    <string name="legend_word">word</string>
+    <string name="legend_digit">digit</string>
+    <string name="legend_symbol">symbol</string>
+
+    <!-- Strength presets -->
+    <string name="strength">Strength</string>
+    <string name="preset_normal">Normal</string>
+    <string name="preset_good">Good</string>
+    <string name="preset_strong">Strong</string>
+
+    <!-- Strength rating -->
+    <string name="strength_weak">Weak</string>
+    <string name="strength_fair">Fair</string>
+    <string name="strength_good">Good</string>
+    <string name="strength_strong">Strong</string>
+    <string name="bits_format">≈ %1$d bit</string>
+    <string name="meter_summary">%1$s · %2$s</string>
+
+    <!-- Crack time -->
+    <string name="crack_instant">cracked instantly</string>
+    <string name="crack_minutes">minutes to crack</string>
+    <string name="crack_hours">hours to crack</string>
+    <string name="crack_days">days to crack</string>
+    <string name="crack_years">years to crack</string>
+    <string name="crack_centuries">centuries to crack</string>
+    <string name="crack_ages">ages to crack</string>
+
+    <!-- Site presets -->
+    <string name="preset_default">Default</string>
+    <string name="preset_no_symbols">No symbols</string>
+    <string name="preset_alnum">Letters + digits</string>
+    <string name="preset_passphrase">Passphrase</string>
+    <string name="preset_pin">PIN</string>
+    <string name="preset_custom">Custom mask</string>
+
+    <!-- Word tab -->
+    <string name="word_description">Need a sonorous, unusual name? Clever Password has a great imagination.</string>
+    <string name="word_options">Options</string>
+    <string name="word_length">Length</string>
+    <string name="word_count">Words</string>
+    <string name="word_case">Case</string>
+    <string name="case_capitalized">Capitalized</string>
+    <string name="case_lower">lowercase</string>
+    <string name="case_upper">UPPERCASE</string>
+
+    <!-- Settings sections -->
+    <string name="section_generation">Generation</string>
+    <string name="section_behavior">Behavior</string>
+    <string name="section_about">About</string>
+
+    <string name="setting_language">Language</string>
+    <string name="setting_language_sub">Bigram grammar for pseudo-words</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+
+    <string name="setting_exclude">Similar characters</string>
+    <string name="setting_exclude_sub">Exclude l · 1 · I · O · 0</string>
+
+    <string name="setting_mask">Custom mask</string>
+    <string name="setting_mask_sub">Password structure template</string>
+    <string name="setting_mask_hint">e.g. W{3}dW{3}s</string>
+
+    <string name="setting_autoclear">Auto-clear clipboard</string>
+    <string name="setting_autoclear_sub">30 seconds after copying</string>
+
+    <string name="setting_sound">Sound</string>
+    <string name="setting_sound_sub">Click and copy</string>
+
+    <!-- About -->
     <string name="app_version">Version %1$s (%2$d)</string>
     <string name="vendor">TomClaw Software</string>
-    <string name="rate_app">Rate App</string>
-    <string name="other_projects">Other Projects</string>
-    <string name="info_extended">Written by Igor Solkin.\nFor any questions please contact me by e-mail\ninbox@tomclaw.com</string>
-    <string name="app_description">\ \ Sure, many people write passwords on stickers, someone stores them in a text file.\n\ \ Some people use trivial passwords, others have one password for all resources.\n\ \ The only correct solution is to create strong, but memorable passwords.\n\ \ And <b>KvassWord</b> doing a great job!</string>
+    <string name="rate_app">Rate app</string>
+    <string name="other_projects">Other apps</string>
+
+    <!-- Memorize -->
+    <string name="memorize_title">Memorize</string>
+    <string name="memorize_sub">Type the password from memory</string>
+    <string name="memorize_show">Show</string>
+    <string name="memorize_done">Done</string>
+    <string name="memorize_success">Great, you remembered it!</string>
+    <string name="memorize_progress">%1$d of %2$d characters correct</string>
+
+    <!-- Quick tile -->
+    <string name="tile_copied">Password copied</string>
+
+    <!-- Mask builder -->
+    <string name="mask_builder_title">Custom mask</string>
+    <string name="custom_mask_none">Not set — tap to build</string>
+    <string name="mask_preview">Preview</string>
+    <string name="mask_add">Add block</string>
+    <string name="mask_block_word">Word</string>
+    <string name="mask_block_digits">Digits</string>
+    <string name="mask_block_symbols">Symbols</string>
+    <string name="mask_block_text">Text</string>
+    <string name="mask_count">Count</string>
+    <string name="mask_text_hint">Text, e.g. - or _</string>
+    <string name="mask_empty">Add blocks to build your password</string>
+    <string name="mask_save">Save</string>
+    <string name="mask_move_up">Move up</string>
+    <string name="mask_move_down">Move down</string>
+    <string name="mask_remove">Remove</string>
 </resources>

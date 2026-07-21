@@ -1,21 +1,117 @@
 <resources>
-    <string name="app_name">KvassWord</string>
-    <string name="next">Следующий</string>
-    <string name="pass_normal">Нормальный</string>
-    <string name="pass_good">Хороший</string>
-    <string name="pass_strong">Сильный</string>
-    <string name="description_pass_normal">Простой для запоминания пароль. Может быть использован для не очень ответственных целей.</string>
-    <string name="description_pass_good">Всё ещё лёгкий для запоминания пароль, но намного более сильный. Может быть использован для большинства личных целей.</string>
-    <string name="description_pass_strong">Верю, вы сможете запоминить такой пароль. Очень сильный пароль, он может быть использован как для личных, так и рабочих целей.</string>
-    <string name="copied">Скопировано!</string>
+    <string name="app_name">Clever Password</string>
+
+    <!-- Navigation -->
     <string name="password">Пароль</string>
-    <string name="nickname">Никнейм</string>
-    <string name="description_nickname">Иногда сложно придумать звучный и необычный никнейм. У KvassWord отличная фантазия!</string>
-    <string name="information">Информация</string>
+    <string name="word">Слово</string>
+    <string name="settings">Настройки</string>
+
+    <!-- Actions -->
+    <string name="generate">Сгенерировать</string>
+    <string name="copied">Скопировано</string>
+    <string name="copy_hint">Нажмите, чтобы скопировать</string>
+    <string name="memorize">Запомнить</string>
+
+    <!-- Colour legend -->
+    <string name="legend_word">слово</string>
+    <string name="legend_digit">цифра</string>
+    <string name="legend_symbol">символ</string>
+
+    <!-- Strength presets -->
+    <string name="strength">Стойкость</string>
+    <string name="preset_normal">Обычный</string>
+    <string name="preset_good">Хороший</string>
+    <string name="preset_strong">Надёжный</string>
+
+    <!-- Strength rating -->
+    <string name="strength_weak">Слабый</string>
+    <string name="strength_fair">Средний</string>
+    <string name="strength_good">Хороший</string>
+    <string name="strength_strong">Надёжный</string>
+    <string name="bits_format">≈ %1$d бит</string>
+    <string name="meter_summary">%1$s · %2$s</string>
+
+    <!-- Crack time -->
+    <string name="crack_instant">взлом мгновенно</string>
+    <string name="crack_minutes">взлом за минуты</string>
+    <string name="crack_hours">взлом за часы</string>
+    <string name="crack_days">взлом за дни</string>
+    <string name="crack_years">взлом за годы</string>
+    <string name="crack_centuries">взлом — столетия</string>
+    <string name="crack_ages">взлом — эпохи</string>
+
+    <!-- Site presets -->
+    <string name="preset_default">По умолчанию</string>
+    <string name="preset_no_symbols">Без символов</string>
+    <string name="preset_alnum">Буквы + цифры</string>
+    <string name="preset_passphrase">Фраза</string>
+    <string name="preset_pin">PIN</string>
+    <string name="preset_custom">Своя маска</string>
+
+    <!-- Word tab -->
+    <string name="word_description">Нужно звучное и необычное имя? У Clever Password отличная фантазия.</string>
+    <string name="word_options">Настройки</string>
+    <string name="word_length">Длина</string>
+    <string name="word_count">Слов</string>
+    <string name="word_case">Регистр</string>
+    <string name="case_capitalized">С заглавной</string>
+    <string name="case_lower">строчные</string>
+    <string name="case_upper">ЗАГЛАВНЫЕ</string>
+
+    <!-- Settings sections -->
+    <string name="section_generation">Генерация</string>
+    <string name="section_behavior">Поведение</string>
+    <string name="section_about">О программе</string>
+
+    <string name="setting_language">Язык генерации</string>
+    <string name="setting_language_sub">Грамматика биграмм для псевдослов</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+
+    <string name="setting_exclude">Похожие символы</string>
+    <string name="setting_exclude_sub">Исключать l · 1 · I · O · 0</string>
+
+    <string name="setting_mask">Своя маска</string>
+    <string name="setting_mask_sub">Шаблон структуры пароля</string>
+    <string name="setting_mask_hint">напр. W{3}dW{3}s</string>
+
+    <string name="setting_autoclear">Автоочистка буфера</string>
+    <string name="setting_autoclear_sub">Через 30 секунд после копирования</string>
+
+    <string name="setting_sound">Звук</string>
+    <string name="setting_sound_sub">Клик и копирование</string>
+
+    <!-- About -->
     <string name="app_version">Версия %1$s (%2$d)</string>
     <string name="vendor">TomClaw Software</string>
     <string name="rate_app">Оценить приложение</string>
-    <string name="other_projects">Другие проекты</string>
-    <string name="info_extended">Главный автор и программист - Игорь Солкин.\nПо любым вопросам обращайтесь по почте\ninbox@tomclaw.com</string>
-    <string name="app_description">\ \ Знаю, многие записывают пароли на бумажках, кто-то хранит их в текстовом файле.\n\ \ Одни пользуются элементарными паролями, у других один пароль ко всем ресурсам.\n\ \ Единственное правильное решение - создавать сильные, но запоминающиеся пароли.\n\ \ И <b>KvassWord</b> далает это превосходно!</string>
+    <string name="other_projects">Другие приложения</string>
+
+    <!-- Memorize -->
+    <string name="memorize_title">Запоминание</string>
+    <string name="memorize_sub">Наберите пароль по памяти</string>
+    <string name="memorize_show">Показать</string>
+    <string name="memorize_done">Готово</string>
+    <string name="memorize_success">Отлично, вы запомнили!</string>
+    <string name="memorize_progress">%1$d из %2$d символов верно</string>
+
+    <!-- Quick tile -->
+    <string name="tile_copied">Пароль скопирован</string>
+
+    <!-- Mask builder -->
+    <string name="mask_builder_title">Свой шаблон</string>
+    <string name="custom_mask_none">Не задан — нажмите, чтобы собрать</string>
+    <string name="mask_preview">Пример</string>
+    <string name="mask_add">Добавить блок</string>
+    <string name="mask_block_word">Слово</string>
+    <string name="mask_block_digits">Цифры</string>
+    <string name="mask_block_symbols">Символы</string>
+    <string name="mask_block_text">Текст</string>
+    <string name="mask_count">Количество</string>
+    <string name="mask_text_hint">Текст, напр. - или _</string>
+    <string name="mask_empty">Добавьте блоки, чтобы собрать пароль</string>
+    <string name="mask_save">Сохранить</string>
+    <string name="mask_move_up">Вверх</string>
+    <string name="mask_move_down">Вниз</string>
+    <string name="mask_remove">Удалить</string>
 </resources>
